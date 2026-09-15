@@ -13,7 +13,7 @@ export default function PWARegister() {
         // Version the worker URL so browsers running the former cache-first
         // worker cannot keep intercepting its own update request.
         const registration = await navigator.serviceWorker.register(
-          '/sw.js?v=20260905-employee-account-controls',
+          '/sw.js?v=20260916-ems-encoding-cleanup',
           { scope: '/' },
         );
         registration.waiting?.postMessage({ type: 'SKIP_WAITING' });
