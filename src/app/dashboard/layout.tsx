@@ -67,7 +67,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { setUser } = useAuthStore();
 

@@ -404,7 +404,7 @@ function ActionIconButton({
 
 function SalesPageContent() {
   const todayDate = getTodayDateInputValue();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const salesQuery = searchParams.toString();
   const { profile: regionalProfile, loading: regionalProfileLoading } = useRegionalProfile();
   const regionalCountry = regionalProfile.marketProfile === 'UAE' ? 'United Arab Emirates' : 'India';

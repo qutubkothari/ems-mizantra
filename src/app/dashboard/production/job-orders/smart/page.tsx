@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 function SmartJobOrderRedirect() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
 
   useEffect(() => {
     const query = searchParams.toString();

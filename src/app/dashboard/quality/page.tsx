@@ -77,7 +77,7 @@ interface QualityDashboard {
 
 function QualityPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const currentUser = readStoredUser();
   const canCreate = hasModulePermission(
     currentUser,

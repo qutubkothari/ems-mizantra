@@ -207,7 +207,7 @@ function SmartJobOrdersItemsPageContent() {
     }
   }, [canCreate, mounted, router]);
 
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
 
   const prefillItemId = searchParams.get("itemId") || "";
   const prefillQuantity = Number(searchParams.get("quantity") || "") || 1;

@@ -41,7 +41,7 @@ export type DashboardReminderQueue = {
 };
 
 export default function DashboardReminders() {
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const { language } = useLocale();
   const reminderRef = useRef<HTMLDivElement>(null);
   const dragState = useRef<{

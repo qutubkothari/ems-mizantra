@@ -316,7 +316,7 @@ const ticketStatusTransitions: Record<string, string[]> = {
 };
 
 function ServicePageContent() {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const { profile: regionalProfile, loading: regionalProfileLoading } = useRegionalProfile();
   const serviceAmount = (value: number | null | undefined) => formatRegionalCurrency(value, regionalProfile);
   const [currentUser, setCurrentUser] = useState<StoredUser | null>(null);

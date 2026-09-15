@@ -58,7 +58,7 @@ function toLabel(segment: string): string {
  * Mount this inside the dashboard layout header.
  */
 export function Breadcrumbs({ className = '' }: { className?: string }) {
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const segments = pathname.split('/').filter(Boolean);
 
   // Build cumulative hrefs

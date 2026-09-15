@@ -895,7 +895,7 @@ function filterNavigationByRouteAccess(
 
 export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const { t } = useLocale();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const [currentSearch, setCurrentSearch] = useState("");
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   // Tracks sections the user explicitly collapsed, so auto-expand doesn't immediately re-open them.

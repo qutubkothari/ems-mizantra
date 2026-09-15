@@ -147,7 +147,7 @@ const normalizeDocumentUrl = (url: string) => {
 };
 
 function TraceProductContent() {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const branding = buildDocumentBranding(null);
   const [searchUID, setSearchUID] = useState(searchParams?.get('uid') || '');
   const [traceData, setTraceData] = useState<UIDTrace | null>(null);

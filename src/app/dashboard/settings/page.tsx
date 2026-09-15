@@ -12,7 +12,7 @@ import LetterheadSettings from './components/LetterheadSettings';
 type TabType = 'users' | 'roles' | 'company' | 'letterhead' | 'email' | 'notifications' | 'integrations';
 
 function SettingsPageContent() {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const [activeTab, setActiveTab] = useState<TabType>('users');
   useEffect(() => {
     const requested = searchParams.get('tab') as TabType | null;

@@ -435,7 +435,7 @@ function calculateRfqLineTotal(
 
 function PRContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const { user: currentUser, hydrate: hydrateAuth } = useAuthStore();
   const [todayDate, setTodayDate] = useState('');
   const [isMounted, setIsMounted] = useState(false);

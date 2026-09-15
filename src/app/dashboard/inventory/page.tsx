@@ -106,7 +106,7 @@ function InventoryPageContent() {
   const router = useRouter();
   const currentUser = readStoredUser();
   const canDelete = hasModulePermission(currentUser, 'Inventory', 'delete');
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const tabParam = searchParams.get('tab');
   
   const [activeTab, setActiveTab] = useState<'movements' | 'alerts' | 'demo'>(

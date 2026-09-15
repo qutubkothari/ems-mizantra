@@ -240,11 +240,15 @@ function money(value: any, currency = "INR") {
 }
 
 function when(value?: string) {
-  if (!value) return "â€”";
+  if (!value) return "—";
   const date = new Date(value);
   return Number.isNaN(date.getTime())
     ? value
     : date.toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" });
+}
+
+function emsText(value?: string | null) {
+  return (value || "").replace(/\bCRM\b/gi, "EMS");
 }
 
 function parseCsv(text: string) {
@@ -313,7 +317,7 @@ function Kpi({ label, value, icon: Icon, tone = "blue" }: any) {
 }
 
 function CrmPageContent() {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const [user, setUser] = useState<StoredUser | null>(null);
   const [data, setData] = useState<Dashboard | null>(null);
   const [busy, setBusy] = useState(true);
@@ -453,7 +457,7 @@ function CrmPageContent() {
     );
   }, [data?.metadata]);
   useEffect(() => {
-    const requested = searchParams.get("view");
+    const requested = searchParams?.get("view");
     if (!requested) {
       setView("pipeline");
       return;
@@ -1267,7 +1271,7 @@ function CrmPageContent() {
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Search company, contact, phone, product or lead numberâ€¦"
+                placeholder="Search company, contact, phone, product or lead number…"
                 className={`${field} pl-9`}
               />
             </label>
@@ -1353,7 +1357,7 @@ function CrmPageContent() {
                         </span>
                       </div>
                       <p className="mt-1 text-xs text-[#7A6555]">
-                        {stage.probability}% probability Â·{" "}
+                        {stage.probability}% probability ·{" "}
                         {money(
                           stageLeads.reduce(
                             (sum, lead) =>
@@ -1505,7 +1509,7 @@ function CrmPageContent() {
                       <td className="p-3">
                         <b>{lead.company_name}</b>
                         <small className="block text-[#806D5C]">
-                          {lead.lead_number} Â·{" "}
+                          {lead.lead_number} ·{" "}
                           {lead.contact_person || lead.phone || "No contact"}
                         </small>
                       </td>
@@ -1564,7 +1568,7 @@ function CrmPageContent() {
                       <span>
                         <b>{lead.company_name}</b>
                         <small className="block text-[#806D5C]">
-                          {lead.owner?.name || "Unassigned"} Â·{" "}
+                          {lead.owner?.name || "Unassigned"} ·{" "}
                           {lead.stage?.stage_name}
                         </small>
                       </span>
@@ -2141,7 +2145,7 @@ function CrmPageContent() {
                 </select>
                 <input
                   className={field}
-                  placeholder="Territory containsâ€¦"
+                  placeholder="Territory contains…"
                   value={ruleForm.territory_filter}
                   onChange={(e) =>
                     setRuleForm({
@@ -2152,7 +2156,7 @@ function CrmPageContent() {
                 />
                 <input
                   className={field}
-                  placeholder="Industry containsâ€¦"
+                  placeholder="Industry contains…"
                   value={ruleForm.industry_filter}
                   onChange={(e) =>
                     setRuleForm({
@@ -2163,7 +2167,7 @@ function CrmPageContent() {
                 />
                 <input
                   className={field}
-                  placeholder="Product containsâ€¦"
+                  placeholder="Product contains…"
                   value={ruleForm.product_filter}
                   onChange={(e) =>
                     setRuleForm({ ...ruleForm, product_filter: e.target.value })
@@ -2228,7 +2232,7 @@ function CrmPageContent() {
                 {ruleForm.assignee_user_ids.length} owner(s) selected
                 {ruleForm.assignee_user_ids.length === 1 &&
                 ruleForm.strategy !== "FIXED_OWNER"
-                  ? " â€” select at least two to avoid a single-owner dependency."
+                  ? " — select at least two to avoid a single-owner dependency."
                   : ""}
               </p>
               <button
@@ -2252,7 +2256,7 @@ function CrmPageContent() {
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-[#6F5A49]">
-                      {rule.strategy.replace(/_/g, " ")} Â·{" "}
+                      {rule.strategy.replace(/_/g, " ")} ·{" "}
                       {rule.assignee_user_ids?.length || 0} owner(s)
                     </p>
                     <p className="mt-1 text-xs text-[#8A7767]">
@@ -2266,7 +2270,7 @@ function CrmPageContent() {
                           `Product: ${rule.product_filter}`,
                       ]
                         .filter(Boolean)
-                        .join(" Â· ") || "Matches all leads"}
+                        .join(" · ") || "Matches all leads"}
                     </p>
                   </div>
                 ))}
@@ -2340,7 +2344,7 @@ function CrmPageContent() {
               {channelToken && (
                 <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 p-3">
                   <b className="text-sm text-amber-900">
-                    Copy this token nowâ€”it will not be shown again.
+                    Copy this token now—it will not be shown again.
                   </b>
                   <div className="mt-2 flex gap-2">
                     <code className="min-w-0 flex-1 overflow-x-auto rounded bg-white px-3 py-2 text-xs">
@@ -2370,7 +2374,7 @@ function CrmPageContent() {
                       </span>
                     </div>
                     <p className="mt-1 text-xs text-[#806D5C]">
-                      {channel.channel_code} Â· Last intake:{" "}
+                      {channel.channel_code} · Last intake:{" "}
                       {when(channel.last_received_at)}
                     </p>
                     <button
@@ -2386,7 +2390,7 @@ function CrmPageContent() {
                 {!meta?.inbound_channels?.length && (
                   <p className="text-sm text-[#806D5C]">
                     No external lead channels configured yet. WhatsApp intake is
-                    controlled separately in Settings â†’ WhatsApp Business.
+                    controlled separately in Settings → WhatsApp Business.
                   </p>
                 )}
               </div>
@@ -2653,7 +2657,7 @@ function CrmPageContent() {
                 className="rounded-xl bg-[#3E2A1F] px-5 py-2.5 font-bold text-white disabled:opacity-50"
               >
                 {saving
-                  ? "Creatingâ€¦"
+                  ? "Creating…"
                   : intakeSettings.auto_assign_enabled
                     ? "Create & auto-assign"
                     : "Create unassigned lead"}
@@ -2681,7 +2685,7 @@ function CrmPageContent() {
                     {selected.company_name}
                   </h2>
                   <p className="text-sm text-[#6F5A49]">
-                    {selected.contact_person || "No contact"} Â·{" "}
+                    {selected.contact_person || "No contact"} ·{" "}
                     {selected.phone || selected.email || "No contact details"}
                   </p>
                 </div>
@@ -2724,7 +2728,7 @@ function CrmPageContent() {
                     >
                       {meta?.stages.map((stage) => (
                         <option key={stage.id} value={stage.id}>
-                          {stage.stage_name} Â· {stage.probability}%
+                          {stage.stage_name} · {stage.probability}%
                         </option>
                       ))}
                     </select>
@@ -2788,15 +2792,15 @@ function CrmPageContent() {
                   </p>
                   <p>
                     <span className="text-[#806D5C]">Territory:</span>{" "}
-                    {selected.territory || "â€”"}
+                    {selected.territory || "—"}
                   </p>
                   <p>
                     <span className="text-[#806D5C]">Product:</span>{" "}
-                    {selected.product_interest || "â€”"}
+                    {selected.product_interest || "—"}
                   </p>
                   <p>
                     <span className="text-[#806D5C]">Industry:</span>{" "}
-                    {selected.industry || "â€”"}
+                    {selected.industry || "—"}
                   </p>
                 </div>
                 {selected.requirement && (
@@ -2856,7 +2860,7 @@ function CrmPageContent() {
                           .filter((lead) => lead.id !== selected.id)
                           .map((lead) => (
                             <option key={lead.id} value={lead.id}>
-                              {lead.lead_number} â€” {lead.company_name}
+                              {lead.lead_number} — {lead.company_name}
                             </option>
                           ))}
                       </select>
@@ -2983,15 +2987,15 @@ function CrmPageContent() {
                       <span className="absolute -left-[6px] top-1 h-2.5 w-2.5 rounded-full bg-[#8B6F47]" />
                       <div className="flex items-start justify-between gap-3">
                         <span>
-                          <b className="text-sm">{activity.subject}</b>
+                          <b className="text-sm">{emsText(activity.subject)}</b>
                           <small className="block text-[#806D5C]">
-                            {activity.activity_type.replace(/_/g, " ")} Â·{" "}
+                            {activity.activity_type.replace(/_/g, " ")} ·{" "}
                             {when(
                               activity.scheduled_at || activity.completed_at,
                             )}
                           </small>
                           {activity.notes && (
-                            <p className="mt-1 text-sm">{activity.notes}</p>
+                            <p className="mt-1 text-sm">{emsText(activity.notes)}</p>
                           )}
                         </span>
                         {activity.status === "OPEN" && allowed("edit") && (
@@ -3076,10 +3080,10 @@ function CrmPageContent() {
                   "Commercial journey",
                   [
                     ...customer360.sales.quotations.map(
-                      (row) => `${row.quotation_number} Â· ${row.status}`,
+                      (row) => `${row.quotation_number} · ${row.status}`,
                     ),
                     ...customer360.sales.orders.map(
-                      (row) => `${row.so_number} Â· ${row.status}`,
+                      (row) => `${row.so_number} · ${row.status}`,
                     ),
                   ],
                 ],
@@ -3087,19 +3091,19 @@ function CrmPageContent() {
                   "Finance",
                   customer360.finance.invoices.map(
                     (row) =>
-                      `${row.invoice_number} Â· ${money(row.balance_amount)}`,
+                      `${row.invoice_number} · ${money(row.balance_amount)}`,
                   ),
                 ],
                 [
                   "Installed assets",
                   customer360.service.installed_assets.map(
-                    (row) => `${row.asset_number || row.uid} Â· ${row.status}`,
+                    (row) => `${row.asset_number || row.uid} · ${row.status}`,
                   ),
                 ],
                 [
                   "Service tickets",
                   customer360.service.tickets.map(
-                    (row) => `${row.ticket_number} Â· ${row.status}`,
+                    (row) => `${row.ticket_number} · ${row.status}`,
                   ),
                 ],
               ].map(([title, rows]: any) => (

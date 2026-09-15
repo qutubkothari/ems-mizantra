@@ -604,7 +604,7 @@ type GrnDiscrepancyPreview = {
 function GRNContent() {
   // const { duplicateState, checkDuplicates, handleProceed, handleCancel } = useDuplicateDetection();
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const initialGrnSearch = searchParams.get("search") || "";
   const viewId = searchParams.get("viewId");
   const returnTo = searchParams.get("returnTo");

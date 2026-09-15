@@ -851,8 +851,8 @@ export default function HrPage() {
 
 function HrPageContent() {
   const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const pathname = usePathname() || "";
+  const searchParams = useSearchParams()!;
   const todayDate = getTodayDateInputValue();
   const serverSafeTodayDate = [
     todayDate,

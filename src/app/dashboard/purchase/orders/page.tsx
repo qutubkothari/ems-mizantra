@@ -330,7 +330,7 @@ type PurchaseOrderFormData = {
 
 function PurchaseOrdersContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()!;
   const todayDate = getTodayDateInputValue();
   const prId = searchParams?.get('prId');
   const viewId = searchParams?.get('viewId');
