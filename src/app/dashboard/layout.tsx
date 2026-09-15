@@ -231,6 +231,7 @@ export default function DashboardLayout({
         "accounts/margin-control": "Margin-to-Cash Control Tower",
         "accounts/costing": "Cost & Margin Control",
         crm: "Enquiry Management System",
+        ems: "Enquiry Management System",
         "accounts/collections": "Collections Worklist",
         "accounts/payables": "Accounts Payable",
         "accounts/supplier-invoices": "Supplier Invoices",

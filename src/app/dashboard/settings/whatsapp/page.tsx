@@ -103,8 +103,8 @@ export default function WhatsAppControlPage() {
       });
       setNotice(
         enabled
-          ? "New WhatsApp contacts will now become assigned CRM leads; later messages will stay in their activity history."
-          : "WhatsApp CRM capture has been disabled.",
+          ? "New WhatsApp contacts will now become assigned EMS leads; later messages will stay in their activity history."
+          : "WhatsApp EMS capture has been disabled.",
       );
       load();
     } catch (e: any) {
@@ -185,7 +185,7 @@ export default function WhatsAppControlPage() {
         </h1>
         <p className="text-sm text-slate-600">
           Tenant-isolated WAHA connection with audited, controlled ERP delivery
-          and CRM intake.
+          and EMS intake.
         </p>
       </header>
       {notice && (
@@ -238,7 +238,7 @@ export default function WhatsAppControlPage() {
           )}
         </div>
         <div className="rounded-xl border bg-[#FBF7EE] p-5">
-          <h2 className="font-semibold text-[#344C67]">CRM lead capture</h2>
+          <h2 className="font-semibold text-[#344C67]">EMS lead capture</h2>
           <p className="mt-2 text-sm text-slate-700">
             Inbound capture:{" "}
             <b>
@@ -251,12 +251,12 @@ export default function WhatsAppControlPage() {
             className="mt-3 rounded border px-3 py-2 text-sm disabled:opacity-40"
           >
             {data.connection?.crm_capture_enabled
-              ? "Disable CRM capture"
-              : "Enable CRM capture"}
+              ? "Disable EMS capture"
+              : "Enable EMS capture"}
           </button>
           <p className="mt-3 text-xs text-slate-600">
             The first message from a new contact creates and assigns one lead.
-            Repeat messages are added to the same CRM timeline.
+            Repeat messages are added to the same EMS timeline.
           </p>
         </div>
         <div className="rounded-xl border bg-[#FBF7EE] p-5">

@@ -7,7 +7,7 @@ import { apiClient } from '../../../../../lib/api-client';
 export default function ClientUploadPage() {
   const params = useParams();
   const router = useRouter();
-  const token = params.token as string;
+  const token = params?.token as string;
   
   const [file, setFile] = useState<File | null>(null);
   const [comments, setComments] = useState('');

@@ -15,6 +15,10 @@ function normalizeBaseUrl(value: string): string {
   return trimmed.endsWith("/") ? trimmed.slice(0, -1) : trimmed;
 }
 
+function applyEmsBranding(value: string): string {
+  return value.replace(/\bCRM\b/gi, "EMS");
+}
+
 function getApiBaseUrl(): string {
   const raw = process.env.NEXT_PUBLIC_API_URL;
   if (raw && raw.trim().length > 0) {
@@ -392,11 +396,11 @@ class ApiClient {
         }
         return {
           success: false,
-          error: buildHttpErrorMessage(
+          error: applyEmsBranding(buildHttpErrorMessage(
             response.status,
             response.statusText,
             data,
-          ),
+          )),
         };
       }
 
@@ -415,7 +419,7 @@ class ApiClient {
         success: false,
         error: isNetworkFailure
           ? "The connection was interrupted. Check mobile data or Wi-Fi and try again."
-          : rawMessage || "Network error occurred",
+          : applyEmsBranding(rawMessage) || "Network error occurred",
       };
     }
   }

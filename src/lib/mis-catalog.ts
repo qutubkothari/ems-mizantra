@@ -50,7 +50,7 @@ export const MIS_PERSONAS: MisPersona[] = [
     audience: "Sales Head and Sales Managers", description: "Pipeline quality, conversion, order fulfilment, margin and collection risk.",
     roleTerms: ["SALES HEAD", "SALES MANAGER", "COMMERCIAL MANAGER", "OWNER"], metricKeys: [],
     quickReports: [
-      { label: "Lead pipeline", description: "Stage value, ageing and conversion", href: "/dashboard/crm?tab=pipeline" },
+      { label: "Lead pipeline", description: "Stage value, ageing and conversion", href: "/dashboard/ems?view=pipeline" },
       { label: "Quotations", description: "Open, expiring and converted quotations", href: "/dashboard/sales?tab=quotations" },
       { label: "Sales orders", description: "Bookings and fulfilment readiness", href: "/dashboard/sales?tab=orders" },
       { label: "Collections", description: "Receivables and overdue follow-up", href: "/dashboard/sales?tab=collections" },
@@ -61,9 +61,9 @@ export const MIS_PERSONAS: MisPersona[] = [
     audience: "Regional and Territory Managers", description: "Territory pipeline, customer coverage, target progress and team follow-ups.",
     roleTerms: ["TERRITORY MANAGER", "REGIONAL MANAGER", "AREA SALES MANAGER"], metricKeys: [],
     quickReports: [
-      { label: "Territory pipeline", description: "Leads and opportunities by stage", href: "/dashboard/crm?tab=pipeline" },
+      { label: "Territory pipeline", description: "Leads and opportunities by stage", href: "/dashboard/ems?view=pipeline" },
       { label: "Customer coverage", description: "Accounts, contacts and recent activity", href: "/dashboard/sales?tab=customers" },
-      { label: "Team follow-ups", description: "Due and overdue sales activities", href: "/dashboard/crm?tab=follow-ups" },
+      { label: "Team follow-ups", description: "Due and overdue sales activities", href: "/dashboard/ems?view=followups" },
     ],
   },
   {
@@ -71,8 +71,8 @@ export const MIS_PERSONAS: MisPersona[] = [
     audience: "Sales Executives and Salespeople", description: "My pipeline, follow-ups, quotations, orders and collection actions for today.",
     roleTerms: ["SALES EXECUTIVE", "SALESPERSON", "SALESMAN", "BUSINESS DEVELOPMENT"], metricKeys: [],
     quickReports: [
-      { label: "My leads", description: "Assigned leads and next actions", href: "/dashboard/crm?tab=leads" },
-      { label: "My follow-ups", description: "Today and overdue activities", href: "/dashboard/crm?tab=follow-ups" },
+      { label: "My leads", description: "Assigned leads and next actions", href: "/dashboard/ems?view=leads" },
+      { label: "My follow-ups", description: "Today and overdue activities", href: "/dashboard/ems?view=followups" },
       { label: "My quotations", description: "Draft, sent and expiring offers", href: "/dashboard/sales?tab=quotations" },
     ],
   },

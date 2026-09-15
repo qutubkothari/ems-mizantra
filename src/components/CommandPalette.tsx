@@ -115,7 +115,7 @@ const staticItems: CmdItem[] = [
     label: "EMS Pipeline",
     subtitle: "Leads, follow-ups, customers and commercial opportunities",
     icon: <Users className="h-4 w-4" />,
-    href: "/dashboard/crm",
+    href: "/dashboard/ems",
     group: "Sales",
   },
 

@@ -353,19 +353,19 @@ const navigation: NavigationItem[] = [
   {
     name: "EMS",
     icon: UsersRound,
-    href: "/dashboard/crm",
+    href: "/dashboard/ems",
     children: [
-      { name: "EMS Overview", href: "/dashboard/crm?view=pipeline" },
-      { name: "Lead Pipeline", href: "/dashboard/crm?view=pipeline" },
-      { name: "All Leads", href: "/dashboard/crm?view=leads" },
-      { name: "Accounts", href: "/dashboard/crm?view=accounts" },
-      { name: "Contacts", href: "/dashboard/crm?view=contacts" },
-      { name: "Opportunities", href: "/dashboard/crm?view=opportunities" },
-      { name: "Revenue Operations", href: "/dashboard/crm?view=revenue" },
-      { name: "Follow-ups", href: "/dashboard/crm?view=followups" },
+      { name: "EMS Overview", href: "/dashboard/ems?view=pipeline" },
+      { name: "Lead Pipeline", href: "/dashboard/ems?view=pipeline" },
+      { name: "All Leads", href: "/dashboard/ems?view=leads" },
+      { name: "Accounts", href: "/dashboard/ems?view=accounts" },
+      { name: "Contacts", href: "/dashboard/ems?view=contacts" },
+      { name: "Opportunities", href: "/dashboard/ems?view=opportunities" },
+      { name: "Revenue Operations", href: "/dashboard/ems?view=revenue" },
+      { name: "Follow-ups", href: "/dashboard/ems?view=followups" },
       { name: "Field Sales", href: "/dashboard/fsm" },
-      { name: "Unified Inbox", href: "/dashboard/crm?view=intake" },
-      { name: "Assignment Rules", href: "/dashboard/crm?view=rules" },
+      { name: "Unified Inbox", href: "/dashboard/ems?view=intake" },
+      { name: "Assignment Rules", href: "/dashboard/ems?view=rules" },
       { name: "Customers", href: "/dashboard/sales?tab=customers" },
     ],
   },
@@ -872,10 +872,10 @@ function filterNavigationByRouteAccess(
     const hasVisibleChildren = Array.isArray(children) && children.length > 0;
     const canAccessItem = isPathAllowedForUser(user, getChildPath(item.href));
 
-    // CRM is licensed as one workspace. Its convenience link to the Sales
-    // customer register must not keep the CRM section visible after the CRM
+    // EMS is licensed as one workspace. Its convenience link to the Sales
+    // customer register must not keep the EMS section visible after the EMS
     // entitlement itself has been disabled.
-    if (item.href === "/dashboard/crm" && !canAccessItem) {
+    if (item.name === "EMS" && !canAccessItem) {
       return [];
     }
 
@@ -1024,20 +1024,30 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
   // its module shell after authentication; API and screen permissions still
   // govern every record/action inside the workspace.
   const emsSourceNavigation = navigation.find(
-    (item) => item.href === "/dashboard/crm",
+    (item) => item.name === "EMS",
   );
   const emsNavigation: NavigationItem[] = emsSourceNavigation
     ? [
         {
           ...emsSourceNavigation,
           children: emsSourceNavigation.children?.filter((child) =>
-            child.href.startsWith("/dashboard/crm"),
+            child.href.startsWith("/dashboard/ems"),
           ),
+        },
+        {
+          name: "Settings",
+          icon: Settings,
+          href: "/dashboard/settings?tab=email",
+          children: [
+            { name: "Email Configuration", href: "/dashboard/settings?tab=email" },
+            { name: "WhatsApp Business", href: "/dashboard/settings/whatsapp" },
+            { name: "WhatsApp Automation", href: "/dashboard/settings/whatsapp/automation" },
+          ],
         },
       ]
     : [];
 
-  const homeHref = emsNavigation[0]?.href || "/dashboard/crm";
+  const homeHref = emsNavigation[0]?.href || "/dashboard/ems";
 
   // Auto-expand active section
   useEffect(() => {

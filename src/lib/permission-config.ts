@@ -178,7 +178,7 @@ export const SCREEN_DEFINITIONS: ScreenDefinition[] = [
   },
   {
     key: "crm-overview",
-    label: "Intelligent CRM",
+    label: "Intelligent EMS",
     module: "Sales Management",
     route: "/dashboard/crm",
     match: "prefix",

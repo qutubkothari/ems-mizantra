@@ -655,7 +655,7 @@ function SalesPageContent() {
   const [quotationCommunicationSaving, setQuotationCommunicationSaving] = useState(false);
   const [quotationCommunicationForm, setQuotationCommunicationForm] = useState({ email: '', subject: '', message: '', follow_up_at: '' });
 
-  // CRM handoff: open a new quotation with its converted customer and CRM
+  // EMS handoff: open a new quotation with its converted customer and EMS
   // reference already selected. The ref prevents navigation events or React
   // remounts from reopening the same handoff.
   useEffect(() => {
@@ -676,19 +676,19 @@ function SalesPageContent() {
           : await apiClient.get<Customer[]>('/sales/customers');
         if (!customers.length) setCustomers(customerRows);
         if (!customerRows.some((customer) => customer.id === customerId)) {
-          throw new Error('The CRM customer is not available in this organisation.');
+          throw new Error('The EMS customer is not available in this organisation.');
         }
         setEditingQuotationId(null);
         setQuotationForm({
           ...createDefaultQuotationForm(),
           customer_id: customerId,
           customer_reference: crmRef,
-          notes: crmRef ? `Prepared from CRM ${crmRef}.` : 'Prepared from CRM.',
+          notes: crmRef ? `Prepared from EMS ${crmRef}.` : 'Prepared from EMS.',
         });
         setShowQuotationForm(true);
       } catch (err: any) {
         quotationHandoffRef.current = '';
-        setError(err?.message || 'Unable to prepare the CRM quotation handoff.');
+        setError(err?.message || 'Unable to prepare the EMS quotation handoff.');
       }
     })();
   }, [activeTab, canCreate, salesQuery]);

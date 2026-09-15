@@ -394,7 +394,7 @@ export default function FieldSalesPage({
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#8B6F47]">
-              CRM · Field execution
+              EMS · Field execution
             </p>
             <h1 className="mt-1 text-2xl font-black md:text-3xl">
               Field Sales
@@ -690,7 +690,7 @@ function Planner({ visits, recommendations, capabilities }: any) {
 
 function Customers({ sites }: any) {
   return (
-    <Card title="Customer sites" eyebrow="CRM accounts and coverage">
+    <Card title="Customer sites" eyebrow="EMS accounts and coverage">
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {sites.map((site: any, index: number) => (
           <div

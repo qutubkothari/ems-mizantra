@@ -124,7 +124,7 @@ const sourceRoute = (source: {
   )
     return "/dashboard/accounts/payables";
   if (/attendance|leave|payroll/.test(key)) return "/dashboard/hr";
-  if (/lead|opportunity|follow.?up|crm/.test(key)) return "/dashboard/crm";
+  if (/lead|opportunity|follow.?up|crm|ems/.test(key)) return "/dashboard/ems";
   if (/production|job order|work order|mrp/.test(key))
     return "/dashboard/production";
   return "/dashboard/reports";
@@ -159,7 +159,7 @@ const analyticsFollowUps = (analytics?: AnalyticsAnswer) => {
       ];
     case "CRM_PIPELINE":
     case "CRM_FOLLOWUPS":
-      return ["Show leads needing follow-up", "Show my CRM pipeline"];
+      return ["Show leads needing follow-up", "Show my EMS pipeline"];
     case "EMPLOYEE_ATTENDANCE":
       return ["Who is late today?", "Show attendance exceptions this month"];
     default:

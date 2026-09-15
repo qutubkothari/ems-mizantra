@@ -78,7 +78,7 @@ export default function MisWorkspace({ domain, view }: { domain: string; view: s
       </div>
     </section>
     {error && <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</div>}
-    {data?.scope?.mode === "TERRITORY_MAPPING_REQUIRED" && <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">No territory is assigned to this manager yet. Configure an active CRM assignment rule to populate this workspace.</div>}
+    {data?.scope?.mode === "TERRITORY_MAPPING_REQUIRED" && <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">No territory is assigned to this manager yet. Configure an active EMS assignment rule to populate this workspace.</div>}
     <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
       {(loading ? Array.from({ length: 6 }) : metrics).map((metric: any, index) => <div key={metric?.key || index} className="min-h-28 rounded-xl border border-[#E2D4BA] bg-white p-4 shadow-sm">
         {loading ? <div className="h-16 animate-pulse rounded bg-stone-100"/> : <><div className="text-xs font-semibold uppercase tracking-wide text-[#80664F]">{metric.label}</div><div className="mt-2 text-2xl font-bold text-[#2F241B]">{metric.displayValue || number(metric.value)}</div><div className="mt-1 text-xs text-[#7C6A5A]">{metric.helper || "Current governed ERP value"}</div></>}

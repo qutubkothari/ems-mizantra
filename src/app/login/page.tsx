@@ -46,7 +46,7 @@ export default function LoginPage() {
       } else if (response.success && response.data?.accessToken) {
         // EMS keeps Mizantra's authentication flow and UI, but has one
         // focused destination: the enquiry-management workspace.
-        router.replace('/dashboard/crm');
+        router.replace('/dashboard/ems');
       } else {
         setError(response.error || 'Login failed. Please check your credentials.');
       }
