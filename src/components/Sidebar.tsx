@@ -1034,16 +1034,20 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             child.href.startsWith("/dashboard/ems"),
           ),
         },
-        {
-          name: "Settings",
-          icon: Settings,
-          href: "/dashboard/settings?tab=email",
-          children: [
-            { name: "Email Configuration", href: "/dashboard/settings?tab=email" },
-            { name: "WhatsApp Business", href: "/dashboard/settings/whatsapp" },
-            { name: "WhatsApp Automation", href: "/dashboard/settings/whatsapp/automation" },
-          ],
-        },
+        ...(isAdminLike(currentUser)
+          ? [
+              {
+                name: "Settings",
+                icon: Settings,
+                href: "/dashboard/settings?tab=email",
+                children: [
+                  { name: "Email Configuration", href: "/dashboard/settings?tab=email" },
+                  { name: "WhatsApp Business", href: "/dashboard/settings/whatsapp" },
+                  { name: "WhatsApp Automation", href: "/dashboard/settings/whatsapp/automation" },
+                ],
+              },
+            ]
+          : []),
       ]
     : [];
 

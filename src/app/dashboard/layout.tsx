@@ -11,6 +11,7 @@ import { SecurityWrapper } from "@/components/SecurityWrapper";
 import { useAuthStore } from "@/stores/auth.store";
 import {
   getDefaultLandingPath,
+  isAdminLike,
   isPathAllowedForUser,
   readStoredUser,
 } from "../../lib/rbac";
@@ -39,6 +40,25 @@ function getRestrictedRootFallback(
   return (restrictedRootFallbacks[pathname] || []).find((route) =>
     isPathAllowedForUser(user, route),
   );
+}
+
+function isStandaloneEmsRouteAllowed(
+  user: ReturnType<typeof readStoredUser>,
+  pathname: string,
+) {
+  if (pathname === "/dashboard/ems" || pathname.startsWith("/dashboard/ems/")) {
+    return isAdminLike(user) || isPathAllowedForUser(user, "/dashboard/crm");
+  }
+
+  if (
+    pathname === "/dashboard/settings" ||
+    pathname === "/dashboard/settings/whatsapp" ||
+    pathname.startsWith("/dashboard/settings/whatsapp/")
+  ) {
+    return isAdminLike(user) || isPathAllowedForUser(user, pathname);
+  }
+
+  return false;
 }
 
 export default function DashboardLayout({
@@ -102,7 +122,11 @@ export default function DashboardLayout({
     const permittedModuleWorkspace = getRestrictedRootFallback(user, pathname);
     const canUseProductionCockpit =
       pathname === "/dashboard/production" && Boolean(permittedModuleWorkspace);
-    if (!isPathAllowedForUser(user, pathname) && !canUseProductionCockpit) {
+    if (
+      !isPathAllowedForUser(user, pathname) &&
+      !isStandaloneEmsRouteAllowed(user, pathname) &&
+      !canUseProductionCockpit
+    ) {
       router.replace(permittedModuleWorkspace || defaultLandingPath);
     }
   }, [pathname, router]);
@@ -153,7 +177,11 @@ export default function DashboardLayout({
           return;
         }
 
-        if (pathname && !isPathAllowedForUser(effectiveUser, pathname)) {
+        if (
+          pathname &&
+          !isPathAllowedForUser(effectiveUser, pathname) &&
+          !isStandaloneEmsRouteAllowed(effectiveUser, pathname)
+        ) {
           router.replace(
             getRestrictedRootFallback(effectiveUser, pathname) ||
               defaultLandingPath,
