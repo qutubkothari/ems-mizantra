@@ -1251,33 +1251,6 @@ function CrmPageContent() {
           />
         </section>
 
-        <nav className="flex gap-1 overflow-x-auto rounded-2xl border border-[#E7DBC5] bg-white p-1.5 shadow-sm">
-          {[
-            ["pipeline", "Pipeline", GitBranch],
-            ["leads", "All leads", UsersRound],
-            ["accounts", "Accounts", UsersRound],
-            ["contacts", "Contacts", UserRoundCheck],
-            ["opportunities", "Opportunities", CircleDollarSign],
-            ["revenue", "Revenue operations", Sparkles],
-            ["followups", "Follow-ups", Activity],
-            [
-              "intake",
-              `Unified inbox${data?.readiness?.intake_review_pending ? ` (${data.readiness.intake_review_pending})` : ""}`,
-              MessageSquareText,
-            ],
-            ["rules", "Assignment rules", Settings2],
-          ].map(([key, label, Icon]: any) => (
-            <button
-              key={key}
-              onClick={() => setView(key)}
-              className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold ${view === key ? "bg-[#3E2A1F] text-white" : "text-[#6F5A49] hover:bg-[#F7F3EA]"}`}
-            >
-              <Icon className="h-4 w-4" />
-              {label}
-            </button>
-          ))}
-        </nav>
-
         {!(
           [
             "rules",
