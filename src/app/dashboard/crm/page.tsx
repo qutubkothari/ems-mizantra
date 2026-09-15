@@ -185,7 +185,7 @@ type Dashboard = {
 
 type Customer360 = {
   customer: any;
-  EMS: { leads: any[]; activities: any[] };
+  crm: { leads: any[]; activities: any[] };
   sales: { quotations: any[]; orders: any[] };
   finance: { invoices: any[]; outstanding: number };
   service: { tickets: any[]; installed_assets: any[] };
@@ -305,7 +305,7 @@ function Kpi({ label, value, icon: Icon, tone = "blue" }: any) {
   );
 }
 
-function EMSPageContent() {
+function CrmPageContent() {
   const searchParams = useSearchParams();
   const [user, setUser] = useState<StoredUser | null>(null);
   const [data, setData] = useState<Dashboard | null>(null);
@@ -382,9 +382,9 @@ function EMSPageContent() {
       "tenant";
     return `${tenantId}:${stored?.id || stored?.userId || stored?.email || "user"}`;
   }, []);
-  const leadDraftStorageKey = `mizantra:EMS-lead-draft:${draftIdentity}`;
+  const leadDraftStorageKey = `mizantra:crm-lead-draft:${draftIdentity}`;
   const activityDraftStorageKey = selected
-    ? `mizantra:EMS-activity-draft:${draftIdentity}:${selected.id}`
+    ? `mizantra:crm-activity-draft:${draftIdentity}:${selected.id}`
     : "";
   const hasLeadDraftContent = Boolean(
     leadForm.company_name ||
@@ -407,14 +407,14 @@ function EMSPageContent() {
     action: "view" | "create" | "edit" | "delete" | "approve" | "download",
   ) =>
     !permissionRequired ||
-    hasScreenPermission(user, "/dashboard/EMS", action) ||
+    hasScreenPermission(user, "/dashboard/crm", action) ||
     hasModulePermission(user, "Sales Management", action);
 
   const load = useCallback(async () => {
     setBusy(true);
     setError("");
     try {
-      setData(await apiClient.get<Dashboard>("/EMS/dashboard"));
+      setData(await apiClient.get<Dashboard>("/crm/dashboard"));
     } catch (err: any) {
       setError(err?.message || "Unable to load the EMS workspace.");
     } finally {
@@ -426,7 +426,7 @@ function EMSPageContent() {
     try {
       const suffix = intakeFilter === "ALL" ? "" : `?decision=${intakeFilter}`;
       setIntake(
-        await apiClient.get<IntakeMessage[]>(`/EMS/intake/messages${suffix}`),
+        await apiClient.get<IntakeMessage[]>(`/crm/intake/messages${suffix}`),
       );
     } catch (err: any) {
       setError(err?.message || "Unable to load the EMS intake queue.");
@@ -640,11 +640,11 @@ function EMSPageContent() {
   async function openLead(id: string) {
     setSaving(true);
     try {
-      setSelected(await apiClient.get<Lead>(`/EMS/leads/${id}`));
+      setSelected(await apiClient.get<Lead>(`/crm/leads/${id}`));
       setActivityForm(EMPTY_ACTIVITY);
       setRecoverableActivityDraft(
         readDraft<typeof EMPTY_ACTIVITY>(
-          `mizantra:EMS-activity-draft:${draftIdentity}:${id}`,
+          `mizantra:crm-activity-draft:${draftIdentity}:${id}`,
         ),
       );
     } catch (err: any) {
@@ -659,7 +659,7 @@ function EMSPageContent() {
     setSaving(true);
     setError("");
     try {
-      const created = await apiClient.post<Lead>("/EMS/leads", {
+      const created = await apiClient.post<Lead>("/crm/leads", {
         ...leadForm,
         expected_value: Number(leadForm.expected_value || 0),
         next_follow_up_at: leadForm.next_follow_up_at || null,
@@ -692,7 +692,7 @@ function EMSPageContent() {
     setSaving(true);
     try {
       const updated = await apiClient.post<Lead>(
-        `/EMS/leads/${selected.id}/stage`,
+        `/crm/leads/${selected.id}/stage`,
         { stage_id: stageId, reason },
       );
       setSelected(updated);
@@ -712,7 +712,7 @@ function EMSPageContent() {
     setSaving(true);
     try {
       const updated = await apiClient.post<Lead>(
-        `/EMS/leads/${selected.id}/assign`,
+        `/crm/leads/${selected.id}/assign`,
         { owner_user_id: ownerUserId },
       );
       setSelected(updated);
@@ -732,7 +732,7 @@ function EMSPageContent() {
     if (!selected) return;
     setSaving(true);
     try {
-      await apiClient.post(`/EMS/leads/${selected.id}/activities`, {
+      await apiClient.post(`/crm/leads/${selected.id}/activities`, {
         ...activityForm,
         scheduled_at: activityForm.scheduled_at || null,
       });
@@ -754,7 +754,7 @@ function EMSPageContent() {
       window.prompt("Outcome / result of this activity") || "Completed";
     setSaving(true);
     try {
-      await apiClient.patch(`/EMS/activities/${activity.id}/complete`, {
+      await apiClient.patch(`/crm/activities/${activity.id}/complete`, {
         outcome,
       });
       if (selected) await openLead(selected.id);
@@ -777,7 +777,7 @@ function EMSPageContent() {
     setSaving(true);
     try {
       const result = await apiClient.post<any>(
-        `/EMS/leads/${selected.id}/convert`,
+        `/crm/leads/${selected.id}/convert`,
         {},
       );
       setMessage(
@@ -796,7 +796,7 @@ function EMSPageContent() {
     event.preventDefault();
     setSaving(true);
     try {
-      await apiClient.post("/EMS/assignment-rules", ruleForm);
+      await apiClient.post("/crm/assignment-rules", ruleForm);
       setRuleForm({
         rule_name: "",
         strategy: "LOAD_BALANCED",
@@ -821,7 +821,7 @@ function EMSPageContent() {
     setChannelToken("");
     try {
       const result = await apiClient.post<any>(
-        "/EMS/inbound-channels",
+        "/crm/inbound-channels",
         channelForm,
       );
       setChannelForm({ channel_code: "WEBSITE", channel_name: "" });
@@ -847,7 +847,7 @@ function EMSPageContent() {
     setSaving(true);
     try {
       const result = await apiClient.post<any>(
-        `/EMS/inbound-channels/${id}/rotate-token`,
+        `/crm/inbound-channels/${id}/rotate-token`,
         {},
       );
       setChannelToken(result.token || "");
@@ -872,7 +872,7 @@ function EMSPageContent() {
         throw new Error(
           "The CSV must contain a header and at least one lead row.",
         );
-      const result = await apiClient.post<any>("/EMS/leads/import", { rows });
+      const result = await apiClient.post<any>("/crm/leads/import", { rows });
       setMessage(
         `${result.created?.length || 0} leads imported, ${result.reused?.length || 0} already existed, ${result.rejected?.length || 0} rejected.`,
       );
@@ -896,7 +896,7 @@ function EMSPageContent() {
     setSaving(true);
     try {
       const retained = await apiClient.post<Lead>(
-        `/EMS/leads/${selected.id}/merge`,
+        `/crm/leads/${selected.id}/merge`,
         {
           target_lead_id: mergeTargetId,
           reason: "Duplicate consolidated by EMS user.",
@@ -918,7 +918,7 @@ function EMSPageContent() {
     setSaving(true);
     try {
       setCustomer360(
-        await apiClient.get<Customer360>(`/EMS/customers/${customerId}/360`),
+        await apiClient.get<Customer360>(`/crm/customers/${customerId}/360`),
       );
     } catch (err: any) {
       setError(err?.message || "Unable to load Customer 360.");
@@ -930,7 +930,7 @@ function EMSPageContent() {
   async function resolveReminder(id: string) {
     setSaving(true);
     try {
-      await apiClient.patch(`/EMS/notifications/${id}/resolve`, {});
+      await apiClient.patch(`/crm/notifications/${id}/resolve`, {});
       await load();
     } catch (err: any) {
       setError(err?.message || "Unable to resolve the reminder.");
@@ -944,8 +944,8 @@ function EMSPageContent() {
     setSaving(true);
     setError("");
     try {
-      await apiClient.patch("/EMS/intake/settings", intakeSettings);
-      await apiClient.patch("/EMS/sales-pool", { user_ids: salesPoolIds });
+      await apiClient.patch("/crm/intake/settings", intakeSettings);
+      await apiClient.patch("/crm/sales-pool", { user_ids: salesPoolIds });
       setMessage(
         intakeSettings.auto_assign_enabled
           ? "Intelligent intake enabled with round-robin salesperson assignment."
@@ -964,7 +964,7 @@ function EMSPageContent() {
     setSaving(true);
     setError("");
     try {
-      await apiClient.post("/EMS/email-receipt-routes", emailRouteForm);
+      await apiClient.post("/crm/email-receipt-routes", emailRouteForm);
       setEmailRouteForm({ route_name: "Sales enquiries", email_address: "" });
       setMessage(
         "Email receipt address configured for intelligent EMS classification.",
@@ -982,7 +982,7 @@ function EMSPageContent() {
   async function toggleEmailRoute(id: string, active: boolean) {
     setSaving(true);
     try {
-      await apiClient.patch(`/EMS/email-receipt-routes/${id}`, {
+      await apiClient.patch(`/crm/email-receipt-routes/${id}`, {
         is_active: active,
       });
       await load();
@@ -997,10 +997,10 @@ function EMSPageContent() {
     setSaving(true);
     setError("");
     try {
-      await apiClient.post(`/EMS/intake/messages/${id}/review`, { action });
+      await apiClient.post(`/crm/intake/messages/${id}/review`, { action });
       setMessage(
         action === "CREATE_LEAD"
-          ? "Reviewed message promoted to a EMS lead."
+          ? "Reviewed message promoted to an EMS lead."
           : "Reviewed message marked irrelevant.",
       );
       await Promise.all([loadIntake(), load()]);
@@ -1024,7 +1024,7 @@ function EMSPageContent() {
     setSaving(true);
     setError("");
     try {
-      const result = await apiClient.post<any>("/EMS/leads/bulk-delete", {
+      const result = await apiClient.post<any>("/crm/leads/bulk-delete", {
         ids: uniqueIds,
         confirmation,
       });
@@ -1067,7 +1067,7 @@ function EMSPageContent() {
     setError("");
     try {
       const result = await apiClient.post<any>(
-        "/EMS/intake/messages/bulk-delete",
+        "/crm/intake/messages/bulk-delete",
         { ids: uniqueIds, confirmation },
       );
       const deletedCount = result.deleted?.length || 0;
@@ -2843,7 +2843,7 @@ function EMSPageContent() {
                       </Link>
                       <Link
                         className="rounded-xl border border-[#8B6F47] px-4 py-2 text-sm font-bold"
-                        href={`/dashboard/sales?tab=quotations&customer=${selected.customer_id}&create=quotation&EMSLead=${selected.id}&EMSRef=${encodeURIComponent(selected.lead_number)}`}
+                        href={`/dashboard/sales?tab=quotations&customer=${selected.customer_id}&create=quotation&crmLead=${selected.id}&crmRef=${encodeURIComponent(selected.lead_number)}`}
                       >
                         Prepare quotation
                       </Link>
@@ -3069,7 +3069,7 @@ function EMSPageContent() {
             <div className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4">
               <Kpi
                 label="EMS leads"
-                value={customer360.EMS.leads.length}
+                value={customer360.crm.leads.length}
                 icon={UsersRound}
               />
               <Kpi
@@ -3152,7 +3152,7 @@ function EMSPageContent() {
   );
 }
 
-export default function EMSPage() {
+export default function CrmPage() {
   return (
     <Suspense
       fallback={
@@ -3166,7 +3166,7 @@ export default function EMSPage() {
         </main>
       }
     >
-      <EMSPageContent />
+      <CrmPageContent />
     </Suspense>
   );
 }

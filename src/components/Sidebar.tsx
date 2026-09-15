@@ -1020,9 +1020,22 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
       ? visibleNavigation.filter((item) => item.name !== "Dashboard")
       : visibleNavigation;
 
-  // Reuse the Mizantra sidebar and permission behaviour, but make this
-  // standalone frontend an EMS-only module entry point.
-  const emsNavigation = finalNavigation.filter((item) => item.href === "/dashboard/crm");
+  // This hostname is licensed as the standalone EMS product. Always render
+  // its module shell after authentication; API and screen permissions still
+  // govern every record/action inside the workspace.
+  const emsSourceNavigation = navigation.find(
+    (item) => item.href === "/dashboard/crm",
+  );
+  const emsNavigation: NavigationItem[] = emsSourceNavigation
+    ? [
+        {
+          ...emsSourceNavigation,
+          children: emsSourceNavigation.children?.filter((child) =>
+            child.href.startsWith("/dashboard/crm"),
+          ),
+        },
+      ]
+    : [];
 
   const homeHref = emsNavigation[0]?.href || "/dashboard/crm";
 

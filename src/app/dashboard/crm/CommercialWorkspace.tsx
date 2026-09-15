@@ -53,7 +53,7 @@ export default function CommercialWorkspace({ mode, users, canCreate, canEdit }:
   const [error, setError] = useState("");
   const load = useCallback(async () => {
     setBusy(true); setError("");
-    try { setData(await apiClient.get<Workspace>("/EMS/commercial-workspace")); }
+    try { setData(await apiClient.get<Workspace>("/crm/commercial-workspace")); }
     catch (next: any) { setError(next?.message || "Unable to load EMS commercial workspace."); }
     finally { setBusy(false); }
   }, []);
@@ -77,7 +77,7 @@ export default function CommercialWorkspace({ mode, users, canCreate, canEdit }:
     }
     if (mode === "opportunities") payload.amount = Number(raw.amount || 0);
     try {
-      const endpoint = mode === "accounts" ? "/EMS/accounts" : mode === "contacts" ? "/EMS/contacts" : "/EMS/opportunities";
+      const endpoint = mode === "accounts" ? "/crm/accounts" : mode === "contacts" ? "/crm/contacts" : "/crm/opportunities";
       await apiClient.post(endpoint, payload);
       setMessage(`${mode === "accounts" ? "Account" : mode === "contacts" ? "Contact" : "Opportunity"} created.`);
       formElement.reset();
@@ -95,7 +95,7 @@ export default function CommercialWorkspace({ mode, users, canCreate, canEdit }:
       if (!lossReason) return;
     }
     setBusy(true); setError("");
-    try { await apiClient.patch(`/EMS/opportunities/${row.id}`, { stage_id: stageId, loss_reason: lossReason }); await load(); }
+    try { await apiClient.patch(`/crm/opportunities/${row.id}`, { stage_id: stageId, loss_reason: lossReason }); await load(); }
     catch (next: any) { setError(next?.message || "Unable to move the opportunity."); }
     finally { setBusy(false); }
   };

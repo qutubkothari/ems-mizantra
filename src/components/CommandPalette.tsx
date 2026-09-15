@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Command } from "cmdk";
@@ -111,11 +111,11 @@ const staticItems: CmdItem[] = [
     group: "Navigation",
   },
   {
-    id: "EMS",
+    id: "crm",
     label: "EMS Pipeline",
     subtitle: "Leads, follow-ups, customers and commercial opportunities",
     icon: <Users className="h-4 w-4" />,
-    href: "/dashboard/EMS",
+    href: "/dashboard/crm",
     group: "Sales",
   },
 
@@ -378,7 +378,7 @@ const staticItems: CmdItem[] = [
 const quickActionIds = new Set([
   "my-day",
   "manager",
-  "EMS",
+  "crm",
   "create-job-order",
   "stock-master",
 ]);
@@ -390,7 +390,7 @@ export function openCommandPalette() {
 }
 
 /**
- * Global command palette â€” Cmd+K / Ctrl+K to open.
+ * Global command palette — Cmd+K / Ctrl+K to open.
  * Provides instant navigation across all modules.
  */
 export function CommandPalette() {
@@ -613,7 +613,7 @@ export function CommandPalette() {
               ref={inputRef as React.RefObject<HTMLInputElement>}
               value={query}
               onValueChange={setQuery}
-              placeholder="Search modules, pages, actionsâ€¦"
+              placeholder="Search modules, pages, actions…"
               className="flex-1 bg-transparent text-sm text-gray-900 placeholder-gray-400 outline-none"
             />
             <kbd className="hidden sm:inline-flex items-center gap-1 rounded border border-gray-200 bg-gray-50 px-2 py-0.5 text-xs text-gray-500 font-mono">
@@ -628,7 +628,7 @@ export function CommandPalette() {
                 role="status"
               >
                 <Loader2 className="h-3.5 w-3.5 animate-spin" /> Searching
-                recordsâ€¦
+                records…
               </div>
             ) : null}
             <Command.Empty className="py-8 text-center text-sm text-gray-400">
@@ -766,13 +766,13 @@ export function CommandPalette() {
           <div className="border-t border-gray-100 px-4 py-2.5 flex items-center gap-4 text-xs text-gray-400 bg-gray-50">
             <span className="flex items-center gap-1">
               <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 font-mono text-xs">
-                â†‘â†“
+                ↑↓
               </kbd>
               navigate
             </span>
             <span className="flex items-center gap-1">
               <kbd className="rounded border border-gray-200 bg-white px-1.5 py-0.5 font-mono text-xs">
-                â†µ
+                ↵
               </kbd>
               open
             </span>
