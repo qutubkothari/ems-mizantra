@@ -69,6 +69,13 @@ type IntakeSettings = {
   email_intake_enabled: boolean;
   whatsapp_intake_enabled: boolean;
 };
+const DEFAULT_INTAKE_SETTINGS: IntakeSettings = {
+  auto_assign_enabled: false,
+  assignment_strategy: "MANUAL",
+  auto_create_confidence: 0.72,
+  email_intake_enabled: false,
+  whatsapp_intake_enabled: true,
+};
 type IntakeMessage = {
   id: string;
   channel: string;
@@ -358,13 +365,9 @@ function CrmPageContent() {
   const [ownerSearch, setOwnerSearch] = useState("");
   const [intake, setIntake] = useState<IntakeMessage[]>([]);
   const [intakeFilter, setIntakeFilter] = useState("REVIEW");
-  const [intakeSettings, setIntakeSettings] = useState<IntakeSettings>({
-    auto_assign_enabled: false,
-    assignment_strategy: "MANUAL",
-    auto_create_confidence: 0.72,
-    email_intake_enabled: false,
-    whatsapp_intake_enabled: true,
-  });
+  const [intakeSettings, setIntakeSettings] = useState<IntakeSettings>(
+    DEFAULT_INTAKE_SETTINGS,
+  );
   const [salesPoolIds, setSalesPoolIds] = useState<string[]>([]);
   const [emailRouteForm, setEmailRouteForm] = useState({
     route_name: "Sales enquiries",
@@ -439,7 +442,10 @@ function CrmPageContent() {
   }, [load]);
   useEffect(() => {
     if (!data?.metadata) return;
-    setIntakeSettings(data.metadata.intake_settings);
+    setIntakeSettings({
+      ...DEFAULT_INTAKE_SETTINGS,
+      ...(data.metadata.intake_settings || {}),
+    });
     setSalesPoolIds(
       (data.metadata.sales_pool || [])
         .filter((candidate) => candidate.is_salesperson)
