@@ -361,7 +361,7 @@ const navigation: NavigationItem[] = [
       { name: "Accounts", href: "/dashboard/ems?view=accounts" },
       { name: "Contacts", href: "/dashboard/ems?view=contacts" },
       { name: "Opportunities", href: "/dashboard/ems?view=opportunities" },
-      { name: "Revenue Operations", href: "/dashboard/ems?view=revenue" },
+      { name: "Sales Team & Targets", href: "/dashboard/ems?view=revenue" },
       { name: "Follow-ups", href: "/dashboard/ems?view=followups" },
       { name: "Field Sales", href: "/dashboard/fsm" },
       { name: "Unified Inbox", href: "/dashboard/ems?view=intake" },

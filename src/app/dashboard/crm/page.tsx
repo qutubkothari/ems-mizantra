@@ -1119,8 +1119,8 @@ function CrmPageContent() {
       description: "Manage active commercial deals and their next steps.",
     },
     revenue: {
-      title: "Revenue operations",
-      description: "Track commercial outcomes and revenue execution.",
+      title: "Sales team & targets",
+      description: "Add salespeople, assign territories and track targets.",
     },
     followups: {
       title: "Follow-ups",
