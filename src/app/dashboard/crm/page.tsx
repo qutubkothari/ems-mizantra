@@ -2012,7 +2012,12 @@ function CrmPageContent() {
                   <b className="text-sm">{salesPoolIds.length} selected</b>
                 </div>
                 <div className="mt-2 grid max-h-48 gap-2 overflow-y-auto rounded-xl border p-3 sm:grid-cols-2 lg:grid-cols-3">
-                  {(meta?.sales_pool || []).map((candidate) => (
+                  {(meta?.sales_pool || [])
+                    // The shared Mizantra test tenant has ERP employees too.
+                    // EMS assignment may only expose its explicitly selected
+                    // salespeople, never the inherited Saifseas directory.
+                    .filter((candidate) => candidate.is_salesperson)
+                    .map((candidate) => (
                     <label
                       key={candidate.id}
                       className="flex items-center gap-2 rounded-lg bg-[#F7F3EA] px-3 py-2 text-sm"
