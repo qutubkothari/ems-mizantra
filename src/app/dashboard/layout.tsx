@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import Sidebar from "../../components/Sidebar";
 import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 import { CommandPalette } from "@/components/CommandPalette";
-import DashboardReminders from "@/components/DashboardReminders";
 import { ConfirmDialogProvider } from "@/components/ui/ConfirmDialog";
 import { SecurityWrapper } from "@/components/SecurityWrapper";
 import { useAuthStore } from "@/stores/auth.store";
@@ -78,15 +77,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname() || "";
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [isStandaloneEmsHost, setIsStandaloneEmsHost] = useState(false);
   const { setUser } = useAuthStore();
-
-  useEffect(() => {
-    setIsStandaloneEmsHost(
-      window.location.hostname === "ems.mizantra.ae" ||
-        window.location.hostname.startsWith("ems."),
-    );
-  }, []);
 
   // Persist sidebar state
   useEffect(() => {
@@ -327,10 +318,9 @@ export default function DashboardLayout({
         <CommandPalette />
         {/* Confirm dialog portal */}
         <ConfirmDialogProvider />
-        {/* ERP purchase/QC approvals are not EMS work. The EMS workspace has
-            its own follow-up and inbox queues, so never show this shared ERP
-            reminder widget on the standalone EMS hostname. */}
-        {!isStandaloneEmsHost && <DashboardReminders />}
+        {/* This frontend is the standalone EMS product. ERP purchase/QC
+            approvals are intentionally absent; EMS has its own follow-up and
+            inbox worklists. */}
         <GovernanceRequiredNotice />
 
         <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
