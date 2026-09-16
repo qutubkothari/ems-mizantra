@@ -1174,7 +1174,7 @@ function CrmPageContent() {
             </div>
             <div className="flex flex-wrap gap-2">
               <Link
-                href="/dashboard/active-planner"
+                href="/dashboard/active-planner?topic=ems"
                 className="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-4 py-2.5 text-sm font-bold hover:bg-white/20"
               >
                 <Bot className="h-4 w-4" /> Ask Mizantra

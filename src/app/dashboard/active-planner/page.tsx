@@ -7,6 +7,7 @@ import {
   useState,
 } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   AlertTriangle,
   BarChart3,
@@ -375,6 +376,8 @@ const downloadAnalyticsDocument = async (
 
 export default function ActivePlannerPage() {
   const { language } = useLocale();
+  const searchParams = useSearchParams();
+  const emsMode = searchParams?.get("topic") === "ems";
   const [input, setInput] = useState(""),
     [context, setContext] = useState(""),
     [result, setResult] = useState<Result | null>(null),
@@ -422,9 +425,22 @@ export default function ActivePlannerPage() {
   const quickPrompts = capabilitiesLoaded
     ? Array.from(
         new Set(
-          capabilities
+          [
+            ...(emsMode
+              ? [
+                  "Show my EMS pipeline",
+                  "Which enquiries need follow-up today?",
+                  "Who owns the unassigned leads?",
+                  "Show the highest-value opportunities",
+                  "What is the sales target and current pipeline?",
+                  "Which territory needs attention?",
+                  "Show latest quotations and their status",
+                ]
+              : []),
+            ...capabilities
             .map((capability) => capability.examples?.[0])
             .filter((example): example is string => Boolean(example)),
+          ]
         ),
       ).slice(0, 8)
     : [];
@@ -1144,10 +1160,11 @@ export default function ActivePlannerPage() {
           <div className="flex shrink-0 items-center gap-2 border-b p-4">
             <Bot className="h-5 w-5 text-[#80613D]" />
             <div>
-              <b>Prompt workspace</b>
+              <b>{emsMode ? "EMS Mizantra" : "Prompt workspace"}</b>
               <p className="hidden text-xs text-[#7A6555] sm:block">
-                Try: “Plan 100 drones for SO-100 by 30-09-2026” or “Raise NCR
-                for 5 rejected impellers”
+                {emsMode
+                  ? "Ask naturally: ‘Which leads need a call?’ or ‘Show my sales target.’"
+                  : "Ask Mizantra about any ERP task in plain language."}
               </p>
             </div>
             <button
