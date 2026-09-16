@@ -347,6 +347,8 @@ function CrmPageContent() {
     formData: typeof EMPTY_LEAD;
   } | null>(null);
   const [selected, setSelected] = useState<Lead | null>(null);
+  const [showConversion, setShowConversion] = useState(false);
+  const [conversionForm, setConversionForm] = useState<any>({});
   const [activityForm, setActivityForm] = useState(EMPTY_ACTIVITY);
   const [recoverableActivityDraft, setRecoverableActivityDraft] = useState<{
     savedAt: string;
@@ -610,6 +612,8 @@ function CrmPageContent() {
       }
     }
     setSelected(null);
+    setShowConversion(false);
+    setConversionForm({});
     setActivityForm(EMPTY_ACTIVITY);
     setRecoverableActivityDraft(null);
   }
@@ -837,13 +841,14 @@ function CrmPageContent() {
     try {
       const result = await apiClient.post<any>(
         `/crm/leads/${selected.id}/convert`,
-        {},
+        conversionForm,
       );
       setMessage(
         `Converted to customer ${result.customer?.customer_code || "successfully"}. You can now prepare the quotation.`,
       );
       await openLead(selected.id);
       await load();
+      setShowConversion(false);
     } catch (err: any) {
       setError(err?.message || "Unable to convert the lead.");
     } finally {
@@ -2943,15 +2948,11 @@ function CrmPageContent() {
                     </>
                   ) : (
                     allowed("create") && (
-                      <button
-                        onClick={convert}
-                        className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-bold text-white"
-                      >
-                        Convert to customer
-                      </button>
+                      <button onClick={() => { setConversionForm({ customer_name:selected.company_name, contact_person:selected.contact_person||"", email:selected.email||"", phone:selected.phone||"", territory:selected.territory||"", industry:selected.industry||"", product_interest:selected.product_interest||"", country:"United Arab Emirates" }); setShowConversion(true); }} className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-bold text-white">Convert to customer</button>
                     )
                   )}
                 </div>
+                {showConversion && !selected.customer_id && <form onSubmit={(event) => { event.preventDefault(); void convert(); }} className="mt-4 space-y-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4"><div className="flex items-center justify-between"><div><p className="font-black text-emerald-900">Customer details for conversion</p><p className="text-xs text-emerald-800">Correct the customer master details before converting this enquiry.</p></div><button type="button" onClick={() => setShowConversion(false)} className="text-sm font-bold text-emerald-800">Cancel</button></div><div className="grid gap-3 sm:grid-cols-2"><input required value={conversionForm.customer_name||""} onChange={(e)=>setConversionForm({...conversionForm,customer_name:e.target.value})} className={field} placeholder="Customer/company name"/><input value={conversionForm.contact_person||""} onChange={(e)=>setConversionForm({...conversionForm,contact_person:e.target.value})} className={field} placeholder="Contact person"/><input type="email" value={conversionForm.email||""} onChange={(e)=>setConversionForm({...conversionForm,email:e.target.value})} className={field} placeholder="Email"/><input value={conversionForm.phone||""} onChange={(e)=>setConversionForm({...conversionForm,phone:e.target.value})} className={field} placeholder="UAE mobile, e.g. +971501234567"/><input value={conversionForm.territory||""} onChange={(e)=>setConversionForm({...conversionForm,territory:e.target.value})} className={field} placeholder="Territory"/><input value={conversionForm.industry||""} onChange={(e)=>setConversionForm({...conversionForm,industry:e.target.value})} className={field} placeholder="Industry"/><input value={conversionForm.product_interest||""} onChange={(e)=>setConversionForm({...conversionForm,product_interest:e.target.value})} className={`${field} sm:col-span-2`} placeholder="Product / solution"/></div><button disabled={saving} className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-bold text-white disabled:opacity-50">Confirm conversion</button></form>}
                 {allowed("edit") && (
                   <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3">
                     <p className="text-xs font-bold uppercase text-amber-900">
