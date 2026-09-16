@@ -78,7 +78,15 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname() || "";
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isStandaloneEmsHost, setIsStandaloneEmsHost] = useState(false);
   const { setUser } = useAuthStore();
+
+  useEffect(() => {
+    setIsStandaloneEmsHost(
+      window.location.hostname === "ems.mizantra.ae" ||
+        window.location.hostname.startsWith("ems."),
+    );
+  }, []);
 
   // Persist sidebar state
   useEffect(() => {
@@ -319,7 +327,10 @@ export default function DashboardLayout({
         <CommandPalette />
         {/* Confirm dialog portal */}
         <ConfirmDialogProvider />
-        <DashboardReminders />
+        {/* ERP purchase/QC approvals are not EMS work. The EMS workspace has
+            its own follow-up and inbox queues, so never show this shared ERP
+            reminder widget on the standalone EMS hostname. */}
+        {!isStandaloneEmsHost && <DashboardReminders />}
         <GovernanceRequiredNotice />
 
         <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
