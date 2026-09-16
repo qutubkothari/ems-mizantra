@@ -10,6 +10,7 @@ import PWARegister from '@/components/PWARegister';
 import PWAStatus from '@/components/PWAStatus';
 import { buildDocumentBranding } from '@/lib/document-branding';
 import GlobalSmartSelect from '@/components/GlobalSmartSelect';
+import ChunkLoadRecovery from '@/components/ChunkLoadRecovery';
 
 const inter = Inter({ subsets: ['latin'] });
 const appBranding = buildDocumentBranding(null);
@@ -62,6 +63,7 @@ export default function RootLayout({
           <PWARegister />
           <PWAStatus />
           <VersionRefreshNotice />
+          <ChunkLoadRecovery />
           {children}
           <ModalEnhancer />
           <GlobalSmartSelect />
