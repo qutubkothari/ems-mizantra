@@ -1095,6 +1095,12 @@ function CrmPageContent() {
 
   const meta = data?.metadata;
   const isOverview = view === "pipeline";
+  const hasDedicatedWorkspaceHeader = [
+    "accounts",
+    "contacts",
+    "opportunities",
+    "revenue",
+  ].includes(view);
   const workspaceTitles: Record<string, { title: string; description: string }> = {
     leads: {
       title: "All leads",
@@ -1207,7 +1213,7 @@ function CrmPageContent() {
               )}
             </div>
           </div>
-        </header> : <header className="flex flex-col gap-3 rounded-2xl border border-[#E7DBC5] bg-white px-5 py-4 shadow-sm md:flex-row md:items-center md:justify-between">
+        </header> : !hasDedicatedWorkspaceHeader && <header className="flex flex-col gap-3 rounded-2xl border border-[#E7DBC5] bg-white px-5 py-4 shadow-sm md:flex-row md:items-center md:justify-between">
           <div>
             <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8B6F47]">EMS workspace</p>
             <h1 className="mt-1 text-2xl font-black">{workspaceHeader.title}</h1>
