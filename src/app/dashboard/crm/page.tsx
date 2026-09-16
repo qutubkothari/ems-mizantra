@@ -1386,7 +1386,7 @@ function CrmPageContent() {
               onChange={(event) => setOwnerFilter(event.target.value)}
             >
               <option value="ALL">All owners</option>
-              {meta?.users.map((user) => (
+              {(meta?.sales_pool || []).filter((user) => user.is_salesperson).map((user) => (
                 <option data-i18n-skip key={user.id} value={user.id}>
                   {user.name}
                 </option>
@@ -1410,7 +1410,7 @@ function CrmPageContent() {
         ) && (
           <CommercialWorkspace
             mode={view as "accounts" | "contacts" | "opportunities"}
-            users={meta?.users || []}
+            users={(meta?.sales_pool || []).filter((user) => user.is_salesperson)}
             canCreate={allowed("create")}
             canEdit={allowed("edit")}
           />
