@@ -50,6 +50,12 @@ function isStandaloneEmsRouteAllowed(
     return isAdminLike(user) || isPathAllowedForUser(user, "/dashboard/crm");
   }
 
+  // Mizantra Assist is part of the standalone EMS workspace. ERP report
+  // permissions must not hide it from an otherwise authorised EMS user.
+  if (pathname === "/dashboard/active-planner") {
+    return isAdminLike(user) || isPathAllowedForUser(user, "/dashboard/crm");
+  }
+
   if (
     pathname === "/dashboard/settings" ||
     pathname === "/dashboard/settings/whatsapp" ||

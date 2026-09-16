@@ -1116,10 +1116,12 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   const getUserInitialsLocal = () => getUserInitials(currentUser);
 
-  const canUsePlanner = isPathAllowedForUser(
-    currentUser,
-    "/dashboard/active-planner",
-  );
+  // EMS is a standalone workspace. Its assistant must be available to EMS
+  // users even when they have not been granted the broader ERP Reports /
+  // Active Planner screen permission.
+  const canUsePlanner =
+    isAdminLike(currentUser) ||
+    isPathAllowedForUser(currentUser, "/dashboard/crm");
   const mobilePrimaryNavigation = [
     { name: "EMS", href: "/dashboard/ems?view=pipeline", icon: Home },
     { name: "All Leads", href: "/dashboard/ems?view=leads", icon: UsersRound },
@@ -1195,7 +1197,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         {canUsePlanner && !collapsed && (
           <div className="px-3 pb-1 pt-2">
             <Link
-              href="/dashboard/active-planner"
+              href="/dashboard/active-planner?topic=ems"
               className={`flex w-full items-center gap-2 rounded-xl border px-3 py-3 text-sm font-bold shadow-sm transition-all ${
                 pathname === "/dashboard/active-planner"
                   ? "border-[#F3D99B] bg-[#FFF4D6] text-[#4A3426]"
@@ -1216,7 +1218,7 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
         {canUsePlanner && collapsed && (
           <div className="flex justify-center px-2 pb-1 pt-2">
             <Link
-              href="/dashboard/active-planner"
+              href="/dashboard/active-planner?topic=ems"
               className={`rounded-xl border p-2.5 transition-colors ${
                 pathname === "/dashboard/active-planner"
                   ? "border-[#F3D99B] bg-[#FFF4D6] text-[#4A3426]"
