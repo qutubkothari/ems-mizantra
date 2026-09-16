@@ -782,6 +782,49 @@ function CrmPageContent() {
     }
   }
 
+  async function editActivity(activity: ActivityRow) {
+    const subject = window.prompt("Follow-up subject", activity.subject);
+    if (subject === null || !subject.trim()) return;
+    const notes = window.prompt("Notes", activity.notes || "");
+    if (notes === null) return;
+    const scheduledAt = window.prompt(
+      "Scheduled date and time (YYYY-MM-DDTHH:mm), or leave blank",
+      activity.scheduled_at ? activity.scheduled_at.slice(0, 16) : "",
+    );
+    if (scheduledAt === null) return;
+    setSaving(true);
+    try {
+      await apiClient.patch(`/crm/activities/${activity.id}`, {
+        activity_type: activity.activity_type,
+        subject: subject.trim(),
+        notes,
+        scheduled_at: scheduledAt || null,
+      });
+      setMessage("Follow-up updated.");
+      if (selected) await openLead(selected.id);
+      await load();
+    } catch (err: any) {
+      setError(err?.message || "Unable to update follow-up.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function deleteActivity(activity: ActivityRow) {
+    if (!window.confirm(`Delete the open follow-up “${activity.subject}”?`)) return;
+    setSaving(true);
+    try {
+      await apiClient.delete(`/crm/activities/${activity.id}`);
+      setMessage("Follow-up deleted.");
+      if (selected) await openLead(selected.id);
+      await load();
+    } catch (err: any) {
+      setError(err?.message || "Unable to delete follow-up.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   async function convert() {
     if (
       !selected ||
@@ -3066,12 +3109,11 @@ function CrmPageContent() {
                           )}
                         </span>
                         {activity.status === "OPEN" && allowed("edit") && (
-                          <button
-                            onClick={() => completeActivity(activity)}
-                            className="shrink-0 rounded-lg border px-2 py-1 text-xs font-bold"
-                          >
-                            Complete
-                          </button>
+                          <div className="flex shrink-0 gap-1">
+                            <button onClick={() => editActivity(activity)} className="rounded-lg border px-2 py-1 text-xs font-bold">Edit</button>
+                            <button onClick={() => completeActivity(activity)} className="rounded-lg border px-2 py-1 text-xs font-bold">Complete</button>
+                            {allowed("delete") && <button onClick={() => deleteActivity(activity)} className="rounded-lg border border-red-200 px-2 py-1 text-xs font-bold text-red-700">Delete</button>}
+                          </div>
                         )}
                       </div>
                     </div>
