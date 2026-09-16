@@ -1217,7 +1217,7 @@ function CrmPageContent() {
           </section>
         )}
 
-        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+        {data && <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
           <Kpi
             label="Open leads"
             value={data?.kpis.open_leads || 0}
@@ -1253,9 +1253,9 @@ function CrmPageContent() {
             icon={AlertCircle}
             tone="red"
           />
-        </section>
+        </section>}
 
-        {!(
+        {data && !(
           [
             "rules",
             "intake",
@@ -1282,7 +1282,7 @@ function CrmPageContent() {
             >
               <option value="ALL">All owners</option>
               {meta?.users.map((user) => (
-                <option key={user.id} value={user.id}>
+                <option data-i18n-skip key={user.id} value={user.id}>
                   {user.name}
                 </option>
               ))}
@@ -1397,7 +1397,7 @@ function CrmPageContent() {
                               <b className="block text-sm">
                                 {money(lead.expected_value, lead.currency_code)}
                               </b>
-                              <small className="text-[#8A7767]">
+                              <small data-i18n-skip className="text-[#8A7767]">
                                 {lead.owner?.name || "Unassigned"}
                               </small>
                             </span>
@@ -1526,7 +1526,7 @@ function CrmPageContent() {
                       <td className="p-3 font-bold text-indigo-700">
                         {Math.round(Number(lead.lead_score || 0))}/100
                       </td>
-                      <td className="p-3">
+                      <td data-i18n-skip className="p-3">
                         {lead.owner?.name || "Unassigned"}
                       </td>
                       <td className="p-3">{lead.source}</td>
@@ -1547,7 +1547,7 @@ function CrmPageContent() {
           </section>
         )}
 
-        {view === "followups" && (
+        {view === "followups" && data && (
           <div className="grid gap-4 lg:grid-cols-[1fr_360px]">
             <section className="rounded-2xl border border-[#E7DBC5] bg-white p-4">
               <h2 className="font-black">Follow-up worklist</h2>
@@ -1568,7 +1568,7 @@ function CrmPageContent() {
                       <span>
                         <b>{lead.company_name}</b>
                         <small className="block text-[#806D5C]">
-                          {lead.owner?.name || "Unassigned"} ·{" "}
+                          <span data-i18n-skip>{lead.owner?.name || "Unassigned"}</span> ·{" "}
                           {lead.stage?.stage_name}
                         </small>
                       </span>
@@ -1975,7 +1975,7 @@ function CrmPageContent() {
                         }
                       />
                       <span>
-                        <b className="block">{candidate.name}</b>
+                        <b data-i18n-skip className="block">{candidate.name}</b>
                         <small>{candidate.email}</small>
                       </span>
                     </label>
@@ -2217,7 +2217,7 @@ function CrmPageContent() {
                         })
                       }
                     />
-                    {user.name}
+                    <span data-i18n-skip>{user.name}</span>
                   </label>
                 ))}
                 {!matchingOwners.length && (
@@ -2770,7 +2770,7 @@ function CrmPageContent() {
                     >
                       <option value="">Auto-assign</option>
                       {meta?.users.map((user) => (
-                        <option key={user.id} value={user.id}>
+                        <option data-i18n-skip key={user.id} value={user.id}>
                           {user.name}
                         </option>
                       ))}

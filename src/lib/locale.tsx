@@ -290,6 +290,14 @@ const MANUAL_ARABIC: Record<string, string> = {
   "Low stock plus unverified material master": "المخزون المنخفض مع بيانات المواد غير المعتمدة",
   "Open and in-progress job orders": "أوامر التشغيل المفتوحة وقيد التنفيذ",
   "Permission-scoped, tenant-scoped read-only query planned semantically by the AI and executed only against the approved ERP dataset catalogue. No arbitrary SQL or write operation is allowed.": "استعلام للقراءة فقط ومقيد بصلاحيات المستخدم والمنشأة، يخططه الذكاء الاصطناعي دلاليًا وينفذه فقط على دليل بيانات النظام المعتمد. لا يُسمح بأي استعلام عشوائي أو عملية كتابة.",
+  "Skip to main content": "تخطي إلى المحتوى الرئيسي",
+  "Intelligent EMS": "نظام إدارة الاستفسارات الذكي",
+  "EMS go-live readiness": "جاهزية نظام إدارة الاستفسارات للتشغيل",
+  "Complete EMS setup": "إكمال إعداد نظام إدارة الاستفسارات",
+  "Commercial EMS": "نظام إدارة الاستفسارات التجاري",
+  "Refresh commercial EMS": "تحديث نظام إدارة الاستفسارات التجاري",
+  "Import CSV": "استيراد ملف CSV",
+  "No live website, email, API, or WhatsApp lead channel is active.": "لا توجد قناة نشطة لاستقبال الاستفسارات من الموقع الإلكتروني أو البريد الإلكتروني أو واجهة البرمجة أو واتساب.",
 };
 
 const ARABIC: Record<string, string> = {
@@ -334,6 +342,7 @@ const ENUM_ARABIC: Record<string, string> = {
   LATE: "متأخر", UNASSIGNED: "غير مسند",
   URGENT: "عاجل", HIGH: "مرتفع", MEDIUM: "متوسط", LOW: "منخفض",
   QUALIFIED: "مؤهل", NEGOTIATION: "تفاوض", LOST: "مفقود", ASC: "تصاعدي", DESC: "تنازلي",
+  REFERRAL: "إحالة", EXHIBITION: "معرض", CAMPAIGN: "حملة",
   FIFO: "FIFO", COGS: "تكلفة المبيعات", QC: "الجودة", GRN: "GRN", SIV: "SIV", SRV: "SRV",
 };
 

@@ -1116,33 +1116,15 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
 
   const getUserInitialsLocal = () => getUserInitials(currentUser);
 
-  const attendanceHref = "/dashboard/hr/employees?tab=attendance";
-  const canUseAttendance = isPathAllowedForUser(currentUser, attendanceHref);
   const canUsePlanner = isPathAllowedForUser(
     currentUser,
     "/dashboard/active-planner",
   );
   const mobilePrimaryNavigation = [
-    canUseAttendance
-      ? { name: "Check In", href: attendanceHref, icon: Clock3 }
-      : { name: "Home", href: homeHref, icon: Home },
-    canUsePlanner
-      ? {
-          name: "Ask",
-          href: "/dashboard/active-planner",
-          icon: Sparkles,
-        }
-      : null,
-    {
-      name: "My Work",
-      href: "/dashboard/my-day",
-      icon: ClipboardList,
-    },
-  ].filter(
-    (item, index, values): item is NonNullable<typeof item> =>
-      !!item &&
-      values.findIndex((candidate) => candidate?.href === item.href) === index,
-  );
+    { name: "EMS", href: "/dashboard/ems?view=pipeline", icon: Home },
+    { name: "All Leads", href: "/dashboard/ems?view=leads", icon: UsersRound },
+    { name: "Follow-ups", href: "/dashboard/ems?view=followups", icon: Clock3 },
+  ];
 
   const hideGlobalMobileNavigation = pathname.startsWith(
     "/dashboard/hr/employees",
@@ -1381,9 +1363,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold truncate text-[#FFFDF8]">
-                  {getUserDisplayName(currentUser)}
-                </p>
+                  <p data-i18n-skip className="text-xs font-semibold truncate text-[#FFFDF8]">
+                    {getUserDisplayName(currentUser)}
+                  </p>
                 {getUserRoleLabel(currentUser) && (
                   <p className="text-[10px] truncate text-[#D8C8AA] font-medium">
                     {getUserRoleLabel(currentUser)}
@@ -1410,7 +1392,9 @@ export default function Sidebar({ collapsed, onToggle }: SidebarProps) {
           <div className="mx-auto grid max-w-lg grid-cols-4 gap-1">
             {mobilePrimaryNavigation.slice(0, 3).map((item) => {
               const Icon = item.icon;
-              const active = isSectionPath(item.href);
+              const active = item.href.includes("?")
+                ? isActiveChild(item.href)
+                : isSectionPath(item.href);
 
               return (
                 <Link
