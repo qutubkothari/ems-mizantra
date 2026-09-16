@@ -7,7 +7,6 @@ import {
   useState,
 } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import {
   AlertTriangle,
   BarChart3,
@@ -376,8 +375,7 @@ const downloadAnalyticsDocument = async (
 
 export default function ActivePlannerPage() {
   const { language } = useLocale();
-  const searchParams = useSearchParams();
-  const emsMode = searchParams?.get("topic") === "ems";
+  const [emsMode, setEmsMode] = useState(false);
   const [input, setInput] = useState(""),
     [context, setContext] = useState(""),
     [result, setResult] = useState<Result | null>(null),
@@ -445,6 +443,9 @@ export default function ActivePlannerPage() {
       ).slice(0, 8)
     : [];
 
+  useEffect(() => {
+    setEmsMode(new URLSearchParams(window.location.search).get("topic") === "ems");
+  }, []);
   useEffect(() => {
     const savedWidth = Number(
       localStorage.getItem("mizantra-planner-chat-width"),
