@@ -1107,8 +1107,8 @@ function CrmPageContent() {
       description: "Search, qualify and progress every enquiry.",
     },
     accounts: {
-      title: "Accounts",
-      description: "Manage organisations and customer relationships.",
+      title: "Customers",
+      description: "Manage prospects and customer relationships.",
     },
     contacts: {
       title: "Contacts",
