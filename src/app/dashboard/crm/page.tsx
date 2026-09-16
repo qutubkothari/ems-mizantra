@@ -1094,6 +1094,42 @@ function CrmPageContent() {
   }
 
   const meta = data?.metadata;
+  const isOverview = view === "pipeline";
+  const workspaceTitles: Record<string, { title: string; description: string }> = {
+    leads: {
+      title: "All leads",
+      description: "Search, qualify and progress every enquiry.",
+    },
+    accounts: {
+      title: "Accounts",
+      description: "Manage organisations and customer relationships.",
+    },
+    contacts: {
+      title: "Contacts",
+      description: "Manage decision-makers and communication consent.",
+    },
+    opportunities: {
+      title: "Opportunities",
+      description: "Manage active commercial deals and their next steps.",
+    },
+    revenue: {
+      title: "Revenue operations",
+      description: "Track commercial outcomes and revenue execution.",
+    },
+    followups: {
+      title: "Follow-ups",
+      description: "Focus on the next customer action due.",
+    },
+    intake: {
+      title: "Unified inbox",
+      description: "Review and route incoming enquiries.",
+    },
+    rules: {
+      title: "Assignment rules",
+      description: "Configure lead routing and intake controls.",
+    },
+  };
+  const workspaceHeader = workspaceTitles[view] || workspaceTitles.leads;
   if (permissionRequired && !allowed("view")) {
     return (
       <main className="min-h-screen bg-[#F7F3EA] p-3 md:p-6">
@@ -1117,7 +1153,7 @@ function CrmPageContent() {
   return (
     <main className="min-h-screen bg-[#F7F3EA] p-3 text-[#2F241B] md:p-6">
       <div className="mx-auto max-w-[1500px] space-y-4">
-        <header className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#203A43] via-[#2C5364] to-[#167D7F] p-5 text-white shadow-lg md:p-7">
+        {isOverview ? <header className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#203A43] via-[#2C5364] to-[#167D7F] p-5 text-white shadow-lg md:p-7">
           <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-teal-100">
@@ -1171,7 +1207,21 @@ function CrmPageContent() {
               )}
             </div>
           </div>
-        </header>
+        </header> : <header className="flex flex-col gap-3 rounded-2xl border border-[#E7DBC5] bg-white px-5 py-4 shadow-sm md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.16em] text-[#8B6F47]">EMS workspace</p>
+            <h1 className="mt-1 text-2xl font-black">{workspaceHeader.title}</h1>
+            <p className="mt-1 text-sm text-[#806D5C]">{workspaceHeader.description}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button onClick={load} className="rounded-xl border border-[#DCCDB8] p-2.5 hover:bg-[#FCF8F0]" title="Refresh">
+              <RefreshCw className={`h-5 w-5 ${busy ? "animate-spin" : ""}`} />
+            </button>
+            {allowed("create") && <button onClick={openLeadCreate} className="inline-flex items-center gap-2 rounded-xl bg-[#F2C66D] px-4 py-2.5 text-sm font-black text-[#3A2A17] hover:bg-[#FFD986]">
+              <Plus className="h-4 w-4" /> New lead
+            </button>}
+          </div>
+        </header>}
 
         {error && (
           <ErpActionableError
@@ -1192,7 +1242,7 @@ function CrmPageContent() {
           </div>
         )}
 
-        {data?.readiness && !data.readiness.ready && (
+        {isOverview && data?.readiness && !data.readiness.ready && (
           <section className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-amber-950 shadow-sm">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div>
@@ -1217,7 +1267,7 @@ function CrmPageContent() {
           </section>
         )}
 
-        {data && <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+        {isOverview && data && <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
           <Kpi
             label="Open leads"
             value={data?.kpis.open_leads || 0}
