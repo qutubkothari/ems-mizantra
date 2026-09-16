@@ -375,6 +375,24 @@ const staticItems: CmdItem[] = [
   },
 ];
 
+// EMS is a standalone product surface, not an ERP menu with selected items
+// hidden. Keep its search results purposeful and prevent old ERP recents or
+// global search responses from exposing unrelated modules.
+const emsStaticItems: CmdItem[] = [
+  { id: "ems-overview", label: "EMS Overview", subtitle: "Pipeline, follow-ups and commercial priorities", icon: <Home className="h-4 w-4" />, href: "/dashboard/ems?view=pipeline", group: "EMS" },
+  { id: "ems-leads", label: "All Leads", subtitle: "New enquiries and qualification", icon: <Users className="h-4 w-4" />, href: "/dashboard/ems?view=leads", group: "EMS" },
+  { id: "ems-customers", label: "Customers", subtitle: "Customer organisations and prospects", icon: <Users className="h-4 w-4" />, href: "/dashboard/ems?view=accounts", group: "EMS" },
+  { id: "ems-contacts", label: "Contacts", subtitle: "Customer contacts", icon: <Users className="h-4 w-4" />, href: "/dashboard/ems?view=contacts", group: "EMS" },
+  { id: "ems-opportunities", label: "Opportunities", subtitle: "Commercial opportunities and quotations", icon: <BarChart2 className="h-4 w-4" />, href: "/dashboard/ems?view=opportunities", group: "EMS" },
+  { id: "ems-targets", label: "Sales Team & Targets", subtitle: "Salespeople, territories and monthly targets", icon: <Users className="h-4 w-4" />, href: "/dashboard/ems?view=revenue", group: "EMS" },
+  { id: "ems-followups", label: "Follow-ups", subtitle: "Calls, meetings and next actions", icon: <Clock3 className="h-4 w-4" />, href: "/dashboard/ems?view=followups", group: "EMS" },
+  { id: "ems-inbox", label: "Unified Inbox", subtitle: "Email and WhatsApp enquiry intake", icon: <ClipboardList className="h-4 w-4" />, href: "/dashboard/ems?view=intake", group: "EMS" },
+  { id: "ems-rules", label: "Assignment Rules", subtitle: "Lead routing and ownership", icon: <Zap className="h-4 w-4" />, href: "/dashboard/ems?view=rules", group: "EMS" },
+  { id: "ems-assist", label: "Ask Mizantra", subtitle: "EMS sales assistant", icon: <Zap className="h-4 w-4" />, href: "/dashboard/active-planner?topic=ems", group: "EMS" },
+  { id: "ems-email", label: "Email Configuration", subtitle: "Configure EMS sender identities", icon: <Settings className="h-4 w-4" />, href: "/dashboard/settings?tab=email", group: "Settings" },
+  { id: "ems-whatsapp", label: "WhatsApp Business", subtitle: "Connect and manage WhatsApp", icon: <Settings className="h-4 w-4" />, href: "/dashboard/settings/whatsapp", group: "Settings" },
+];
+
 const quickActionIds = new Set([
   "my-day",
   "manager",
@@ -414,6 +432,15 @@ export function CommandPalette() {
   }, [user]);
   const recentStorageKey = `mizantra:command-recent:${identityKey}`;
   const metricsStorageKey = `mizantra:command-search-metrics:${identityKey}`;
+  const isEmsHost =
+    typeof window !== "undefined" &&
+    (window.location.hostname === "ems.mizantra.ae" ||
+      window.location.hostname.startsWith("ems."));
+  const navigationItems = isEmsHost ? emsStaticItems : staticItems;
+  const isEmsRoute = (href: string) =>
+    href.startsWith("/dashboard/ems") ||
+    href === "/dashboard/active-planner?topic=ems" ||
+    href.startsWith("/dashboard/settings");
 
   useEffect(() => {
     hydrate();
@@ -525,7 +552,7 @@ export function CommandPalette() {
           const nextRecords = (response.results || []).map((item) => ({
               ...item,
               icon: <Database className="h-4 w-4" />,
-            }));
+            })).filter((item) => !isEmsHost || isEmsRoute(item.href));
           setRecords(nextRecords);
           void recordSearchOutcome(query, nextRecords.length);
         }
@@ -539,7 +566,7 @@ export function CommandPalette() {
       active = false;
       window.clearTimeout(timer);
     };
-  }, [metricsStorageKey, open, query]);
+  }, [isEmsHost, metricsStorageKey, open, query]);
 
   const handleSelect = (item: CmdItem, source: "record" | "navigation") => {
     try {
@@ -584,10 +611,19 @@ export function CommandPalette() {
   if (!open) return null;
 
   // Group items
-  const allowedItems = staticItems.filter((item) =>
-    isPathAllowedForUser(user, item.href.split("?")[0]),
+  const allowedItems = navigationItems.filter((item) =>
+    isEmsHost
+      ? item.href.startsWith("/dashboard/ems") ||
+        item.href === "/dashboard/active-planner?topic=ems" ||
+        isPathAllowedForUser(user, item.href.split("?")[0])
+      : isPathAllowedForUser(user, item.href.split("?")[0]),
   );
   const allowedRecentItems = recentItems.filter((item) =>
+    (!isEmsHost ||
+      ((item.href.startsWith("/dashboard/ems") ||
+        item.href === "/dashboard/active-planner?topic=ems" ||
+        isPathAllowedForUser(user, item.href.split("?")[0])) &&
+        isEmsRoute(item.href))) &&
     isPathAllowedForUser(user, item.href.split("?")[0]),
   );
   const quickActions = allowedItems.filter((item) => quickActionIds.has(item.id));
