@@ -51,9 +51,12 @@ function isStandaloneEmsRouteAllowed(
   }
 
   // Mizantra Assist is part of the standalone EMS workspace. ERP report
-  // permissions must not hide it from an otherwise authorised EMS user.
+  // permissions must not hide it from an otherwise authorised EMS user. This
+  // is intentionally based on the signed-in shell user: the EMS assistant
+  // applies its own record/action permissions server-side, and checking a
+  // feature snapshot here can race the post-login entitlement refresh.
   if (pathname === "/dashboard/active-planner") {
-    return isAdminLike(user) || isPathAllowedForUser(user, "/dashboard/crm");
+    return Boolean(user);
   }
 
   if (
