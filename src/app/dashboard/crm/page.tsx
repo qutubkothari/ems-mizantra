@@ -637,15 +637,21 @@ function CrmPageContent() {
 
   const matchingOwners = useMemo(() => {
     const query = ownerSearch.trim().toLowerCase();
-    if (!query) return data?.metadata.users || [];
-    return (data?.metadata.users || []).filter((candidate) =>
+    // This standalone EMS tenant shares the test database with ERP. Routing
+    // must therefore offer only people explicitly added to the EMS sales pool,
+    // never the tenant-wide employee directory.
+    const salespeople = (data?.metadata.sales_pool || []).filter(
+      (candidate) => candidate.is_salesperson,
+    );
+    if (!query) return salespeople;
+    return salespeople.filter((candidate) =>
       [candidate.name, candidate.email]
         .filter(Boolean)
         .join(" ")
         .toLowerCase()
         .includes(query),
     );
-  }, [data?.metadata.users, ownerSearch]);
+  }, [data?.metadata.sales_pool, ownerSearch]);
 
   async function openLead(id: string) {
     setSaving(true);
