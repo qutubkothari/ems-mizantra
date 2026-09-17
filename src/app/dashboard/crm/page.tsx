@@ -1303,7 +1303,7 @@ function CrmPageContent() {
           </div>
         </header>}
 
-        {error && (
+        {error && !selected && (
           <ErpActionableError
             title="EMS action needs attention"
             message={error}
@@ -2845,6 +2845,15 @@ function CrmPageContent() {
               </div>
             </div>
             <div className="space-y-4 p-4 md:p-5">
+              {error && (
+                <ErpActionableError
+                  title="EMS action needs attention"
+                  message={error}
+                  nextStep="Correct the highlighted field in this open record, then retry. Your entered information is preserved."
+                  actionLabel="Dismiss"
+                  onAction={() => setError("")}
+                />
+              )}
               <section className="rounded-2xl border bg-white p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
