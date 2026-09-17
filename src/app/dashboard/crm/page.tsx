@@ -350,6 +350,11 @@ function CrmPageContent() {
   const [showConversion, setShowConversion] = useState(false);
   const [conversionForm, setConversionForm] = useState<any>({});
   const [activityForm, setActivityForm] = useState(EMPTY_ACTIVITY);
+  const [editingActivity, setEditingActivity] = useState<ActivityRow | null>(null);
+  const [editedActivityForm, setEditedActivityForm] = useState({
+    ...EMPTY_ACTIVITY,
+    status: "OPEN",
+  });
   const [recoverableActivityDraft, setRecoverableActivityDraft] = useState<{
     savedAt: string;
     formData: typeof EMPTY_ACTIVITY;
@@ -615,6 +620,8 @@ function CrmPageContent() {
     setShowConversion(false);
     setConversionForm({});
     setActivityForm(EMPTY_ACTIVITY);
+    setEditingActivity(null);
+    setEditedActivityForm({ ...EMPTY_ACTIVITY, status: "OPEN" });
     setRecoverableActivityDraft(null);
   }
 
@@ -786,27 +793,40 @@ function CrmPageContent() {
     }
   }
 
-  async function editActivity(activity: ActivityRow) {
-    const subject = window.prompt("Follow-up subject", activity.subject);
-    if (subject === null || !subject.trim()) return;
-    const notes = window.prompt("Notes", activity.notes || "");
-    if (notes === null) return;
-    const scheduledAt = window.prompt(
-      "Scheduled date and time (YYYY-MM-DDTHH:mm), or leave blank",
-      activity.scheduled_at ? activity.scheduled_at.slice(0, 16) : "",
-    );
-    if (scheduledAt === null) return;
+  function editActivity(activity: ActivityRow) {
+    setEditingActivity(activity);
+    setEditedActivityForm({
+      activity_type: activity.activity_type || "FOLLOW_UP",
+      subject: activity.subject || "",
+      notes: activity.notes || "",
+      scheduled_at: activity.scheduled_at ? activity.scheduled_at.slice(0, 16) : "",
+      status: activity.status || "OPEN",
+    });
+  }
+
+  async function saveEditedActivity(event: FormEvent) {
+    event.preventDefault();
+    if (!editingActivity || !editedActivityForm.subject.trim()) return;
     setSaving(true);
+    setError("");
     try {
-      await apiClient.patch(`/crm/activities/${activity.id}`, {
-        activity_type: activity.activity_type,
-        subject: subject.trim(),
-        notes,
-        scheduled_at: scheduledAt || null,
-      });
-      setMessage("Follow-up updated.");
+      if (editedActivityForm.status === "COMPLETED") {
+        await apiClient.patch(`/crm/activities/${editingActivity.id}/complete`, {
+          outcome: editedActivityForm.notes || editedActivityForm.subject,
+        });
+        setMessage("Follow-up updated and marked complete.");
+      } else {
+        await apiClient.patch(`/crm/activities/${editingActivity.id}`, {
+          activity_type: editedActivityForm.activity_type,
+          subject: editedActivityForm.subject.trim(),
+          notes: editedActivityForm.notes,
+          scheduled_at: editedActivityForm.scheduled_at || null,
+        });
+        setMessage("Follow-up updated.");
+      }
       if (selected) await openLead(selected.id);
       await load();
+      setEditingActivity(null);
     } catch (err: any) {
       setError(err?.message || "Unable to update follow-up.");
     } finally {
@@ -3128,6 +3148,104 @@ function CrmPageContent() {
               </section>
             </div>
           </aside>
+        </div>
+      )}
+      {editingActivity && (
+        <div className="fixed inset-0 z-[1200] flex items-center justify-center bg-black/55 p-4">
+          <button
+            type="button"
+            aria-label="Close follow-up editor"
+            className="absolute inset-0"
+            onClick={() => setEditingActivity(null)}
+          />
+          <form
+            onSubmit={saveEditedActivity}
+            className="relative w-full max-w-2xl space-y-4 rounded-3xl bg-white p-5 shadow-2xl md:p-6"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-widest text-[#8B6F47]">
+                  Relationship timeline
+                </p>
+                <h3 className="text-xl font-black">Edit follow-up</h3>
+                <p className="mt-1 text-sm text-[#6F5A49]">
+                  Update all details before saving.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingActivity(null)}
+                className="rounded-full bg-[#F2EBDD] p-2"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <label className="text-xs font-bold uppercase text-[#6F5A49]">
+                Activity type
+                <select
+                  className={`${field} mt-1`}
+                  value={editedActivityForm.activity_type}
+                  onChange={(event) => setEditedActivityForm({ ...editedActivityForm, activity_type: event.target.value })}
+                >
+                  {["FOLLOW_UP", "CALL", "EMAIL", "WHATSAPP", "MEETING", "SITE_VISIT", "TASK", "NOTE", "DEMO"].map((type) => (
+                    <option key={type} value={type}>{type.replace(/_/g, " ")}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="text-xs font-bold uppercase text-[#6F5A49]">
+                Status
+                <select
+                  className={`${field} mt-1`}
+                  value={editedActivityForm.status}
+                  onChange={(event) => setEditedActivityForm({ ...editedActivityForm, status: event.target.value })}
+                >
+                  <option value="OPEN">Open</option>
+                  <option value="COMPLETED">Completed</option>
+                </select>
+              </label>
+              <label className="text-xs font-bold uppercase text-[#6F5A49] sm:col-span-2">
+                Subject / next action
+                <input
+                  required
+                  className={`${field} mt-1`}
+                  value={editedActivityForm.subject}
+                  onChange={(event) => setEditedActivityForm({ ...editedActivityForm, subject: event.target.value })}
+                />
+              </label>
+              <label className="text-xs font-bold uppercase text-[#6F5A49] sm:col-span-2">
+                Notes / outcome
+                <textarea
+                  rows={4}
+                  className={`${field} mt-1`}
+                  value={editedActivityForm.notes}
+                  onChange={(event) => setEditedActivityForm({ ...editedActivityForm, notes: event.target.value })}
+                />
+              </label>
+              {editedActivityForm.status === "OPEN" && (
+                <label className="text-xs font-bold uppercase text-[#6F5A49] sm:col-span-2">
+                  Scheduled date and time
+                  <input
+                    type="datetime-local"
+                    className={`${field} mt-1`}
+                    value={editedActivityForm.scheduled_at}
+                    onChange={(event) => setEditedActivityForm({ ...editedActivityForm, scheduled_at: event.target.value })}
+                  />
+                </label>
+              )}
+            </div>
+            {editedActivityForm.status === "COMPLETED" && (
+              <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800">
+                Saving will record the notes as the completion outcome and close this follow-up.
+              </p>
+            )}
+            <div className="flex justify-end gap-2">
+              <button type="button" onClick={() => setEditingActivity(null)} className="rounded-xl border px-4 py-2.5 font-bold">Cancel</button>
+              <button disabled={saving} className="rounded-xl bg-[#3E2A1F] px-5 py-2.5 font-bold text-white disabled:opacity-50">
+                {saving ? "Saving…" : "Save follow-up"}
+              </button>
+            </div>
+          </form>
         </div>
       )}
       {customer360 && (
