@@ -2913,11 +2913,13 @@ function CrmPageContent() {
                       onChange={(e) => assign(e.target.value)}
                     >
                       <option value="">Auto-assign</option>
-                      {meta?.users.map((user) => (
+                      {(meta?.sales_pool || [])
+                        .filter((user) => user.is_salesperson)
+                        .map((user) => (
                         <option data-i18n-skip key={user.id} value={user.id}>
                           {user.name}
                         </option>
-                      ))}
+                        ))}
                     </select>
                   </label>
                   <div>
@@ -2954,27 +2956,13 @@ function CrmPageContent() {
                 )}
                 <div className="mt-4 flex flex-wrap gap-2">
                   {selected.customer_id ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => openCustomer360(selected.customer_id)}
-                        className="rounded-xl bg-[#203A43] px-4 py-2 text-sm font-bold text-white"
-                      >
-                        Customer 360
-                      </button>
-                      <Link
-                        className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-bold text-white"
-                        href={`/dashboard/sales?tab=customers&customer=${selected.customer_id}`}
-                      >
-                        Open customer
-                      </Link>
-                      <Link
-                        className="rounded-xl border border-[#8B6F47] px-4 py-2 text-sm font-bold"
-                        href={`/dashboard/sales?tab=quotations&customer=${selected.customer_id}&create=quotation&crmLead=${selected.id}&crmRef=${encodeURIComponent(selected.lead_number)}`}
-                      >
-                        Prepare quotation
-                      </Link>
-                    </>
+                    <button
+                      type="button"
+                      onClick={() => openCustomer360(selected.customer_id)}
+                      className="rounded-xl bg-[#203A43] px-4 py-2 text-sm font-bold text-white"
+                    >
+                      Customer 360
+                    </button>
                   ) : (
                     allowed("create") && (
                       <button onClick={() => { setConversionForm({ customer_name:selected.company_name, contact_person:selected.contact_person||"", email:selected.email||"", phone:selected.phone||"", territory:selected.territory||"", industry:selected.industry||"", product_interest:selected.product_interest||"", country:"United Arab Emirates" }); setShowConversion(true); }} className="rounded-xl bg-emerald-700 px-4 py-2 text-sm font-bold text-white">Convert to customer</button>

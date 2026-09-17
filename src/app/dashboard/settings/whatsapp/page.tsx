@@ -184,7 +184,7 @@ export default function WhatsAppControlPage() {
           WhatsApp business control
         </h1>
         <p className="text-sm text-slate-600">
-          Tenant-isolated WAHA connection with audited, controlled ERP delivery
+          Tenant-isolated WAHA connection with audited, controlled messaging
           and EMS intake.
         </p>
       </header>

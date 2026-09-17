@@ -989,7 +989,7 @@ export default function ActivePlannerPage() {
               <span className="hidden sm:inline">Active Planner</span>
             </h1>
             <p className="mt-1 hidden max-w-3xl text-sm text-[#6F5A45] sm:block [@media(max-height:760px)]:hidden">
-              One prompt workspace for the complete ERP. It prepares safe
+              One prompt workspace for Enquiry Management. It prepares safe
               drafts, validates controlled transactions, and hands work to the
               correct native screen without bypassing approvals.
             </p>
